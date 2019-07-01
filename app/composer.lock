@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3fd3decb31f66c6eabe9a82ea0d220a2",
+    "content-hash": "63e5b0e9e894e0550ca9809fa3c19601",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -3828,15 +3828,15 @@
         },
         {
             "name": "wpackagist-plugin/w3-total-cache",
-            "version": "0.9.7",
+            "version": "0.9.7.5",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/w3-total-cache/",
-                "reference": "tags/0.9.7"
+                "reference": "tags/0.9.7.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/w3-total-cache.0.9.7.zip"
+                "url": "https://downloads.wordpress.org/plugin/w3-total-cache.0.9.7.5.zip"
             },
             "require": {
                 "composer/installers": "~1.0"

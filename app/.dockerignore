@@ -6,5 +6,4 @@ Dockerfile
 .dockerignore
 
 /vendor/*
-!/vendor/.htaccess
 !/vendor/.gitkeep
