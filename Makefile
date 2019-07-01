@@ -108,6 +108,9 @@ stack-down: ## Teardown the stack
 
 stack-restart: stack-down stack-up ## Restart stack
 
+stack-volumes-remove: ## Remove rabbitmq, es and db volume thus resetting the database - the stack must be down for this
+	docker volume rm courses_db-data courses_es-data courses_rabbitmq-data courses_automysqlbackup-data
+
 stack-pause: ## Pause all services in the stack
 	docker-compose -p courses pause
 

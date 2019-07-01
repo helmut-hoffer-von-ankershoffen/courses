@@ -7,15 +7,17 @@
     src: docker-compose.yaml
     dest: ~/docker-compose.yaml
 
+- name: Stack pull!
+  become: yes
+  become_user: shop
+  shell: cd ~/ && make stack-pull
+
+- name: Stack down!
+  become: yes
+  become_user: shop
+  shell: cd ~/ && make stack-down
+
 - name: Stack up!
   become: yes
-  become_user: '{{ app.user.name }}'
-  docker_compose:
-    project_src: ~/
-    app.name: '{{ app.stack.name }}'
-    files: docker-compose.yaml
-    pull: yes
-    recreate: smart
-    restarted: no
-    remove_orphans: yes
-    state: present
+  become_user: shop
+  shell: cd ~/ && make stack-up
