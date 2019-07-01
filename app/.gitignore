@@ -6,7 +6,6 @@ pub/app/uploads/*
 
 # WordPress
 pub/wp
-pub/.htaccess
 
 # Dotenv
 .env
