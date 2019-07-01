@@ -31,6 +31,21 @@ else
   fi
 fi
 
+echo "Configure URL rewriting ..."
+$CMD_APP rewrite structure "/%postname%"
+
+echo "Activating plugins ..."
+$CMD_APP plugin activate better-search-replace
+$CMD_APP plugin activate broken-link-checker
+$CMD_APP plugin activate elementor
+$CMD_APP plugin activate regenerate-thumbnails
+$CMD_APP plugin activate simple-image-sizes
+$CMD_APP plugin activate w3-total-cache
+$CMD_APP plugin activate wordpress-seo
+
+echo "Activating theme ..."
+$CMD_APP theme activate hestia
+
 ## Dump autoloader
 echo "Dumping optimized autoloader"
 cd /app && composer dump-autoload -o --apcu

@@ -147,94 +147,17 @@ app-open: ## Open app frontend and backend in your browser
 	python -mwebbrowser https://courses.localhost
 	python -mwebbrowser https://courses.localhost/wp-admin
 
+app-exec: ## Exec WP CLI
+	@docker-compose -p courses exec app $(filter-out $@,$(MAKECMDGOALS))
+
+app-wp-exec: ## Exec bin/magento - you can pass args
+	@docker-compose -p courses exec app vendor/bin/wp $(filter-out $@,$(MAKECMDGOALS))
+
 phpmyadmin-open: ## Open phpMyAdmin in your browser
 	python -mwebbrowser http://courses.localhost:8080
 
 rabbitmq-open: ## Open RabbitMQ management UI in your browser
 	python -mwebbrowser http://courses.localhost:15672
-
-
-build-and-push: nginx-build-and-push varnish-build-and-push app-build-and-push phpmyadmin-build-and-push automysqlbackup-build-and-push rabbitmq-build-and-push redis-build-and-push memcached-build-and-push es-build-and-push db-build-and-push ## Build all docker images and push to private registry
-
-varnish-build-and-push: ## Build varnish docker image, tag and push to private registry
-	docker build -t varnish stack/varnish
-	docker tag varnish max-one.local:5001/courses/varnish:latest
-	docker push max-one.local:5001/courses/varnish
-
-nginx-build-and-push: ## Build nginx docker image, tag and push to private registry
-	docker build -t nginx stack/nginx
-	docker tag nginx max-one.local:5001/courses/nginx:latest
-	docker push max-one.local:5001/courses/nginx
-
-app-build-and-push: ## Build app docker image, tag and push to private registry
-	docker build -t app app
-	docker tag app max-one.local:5001/courses/app:latest
-	docker push max-one.local:5001/courses/app
-
-phpmyadmin-build-and-push: ## Build phpMyAdmin docker image, tag and push to private registry
-	docker build -t phpmyadmin stack/phpmyadmin
-	docker tag phpmyadmin max-one.local:5001/courses/phpmyadmin:latest
-	docker push max-one.local:5001/courses/phpmyadmin
-
-automysqlbackup-build-and-push: ## Build automysqlbackup docker image, tag and push to private registry
-	docker build -t automysqlbackup stack/automysqlbackup
-	docker tag automysqlbackup max-one.local:5001/courses/automysqlbackup:latest
-	docker push max-one.local:5001/courses/automysqlbackup
-
-rabbitmq-build-and-push: ## Build RabbitMQ docker image, tag and push to private registry
-	docker build -t rabbitmq stack/rabbitmq
-	docker tag rabbitmq max-one.local:5001/courses/rabbitmq:latest
-	docker push max-one.local:5001/courses/rabbitmq
-
-redis-build-and-push: ## Build Redis docker image, tag and push to private registry
-	docker build -t redis stack/redis
-	docker tag redis max-one.local:5001/courses/redis:latest
-	docker push max-one.local:5001/courses/redis
-
-memcached-build-and-push: ## Build Memcached docker image, tag and push to private registry
-	docker build -t memcached stack/memcached
-	docker tag memcached max-one.local:5001/courses/memcached:latest
-	docker push max-one.local:5001/courses/memcached
-
-es-build-and-push: ## Build Elasticsearch docker image, tag and push to private registry
-	docker build -t es stack/es
-	docker tag es max-one.local:5001/courses/es:latest
-	docker push max-one.local:5001/courses/es
-
-db-build-and-push: ## Build MariaDB docker image, tag and push to private registry
-	docker build -t db stack/db
-	docker tag db max-one.local:5001/courses/db:latest
-	docker push max-one.local:5001/courses/db
-
-
-production-build-and-deploy: build-and-push production-deploy ## Build all docker images and deploy to production
-
-production-deploy: ## Deploy to production without building first
-	cd workflow/production && ansible-playbook main.yml --tags "deploy"
-
-production-open: production-logging-open ## Open services on production in your browser
-	python -mwebbrowser https://courses.20steps.de
-	python -mwebbrowser https://courses.20steps.de/wp-admin
-	python -mwebbrowser http://max-one.local:8081
-	python -mwebbrowser http://max-one.local:15672
-	python -mwebbrowser http://max-one.local:9000
-
-production-nginx-cert-renewal: ## Renew certs of nginx on production
-	cd workflow/production && ansible-playbook main.yml --tags "cert"
-
-production-logging-open: ## Open logging dashboard (graylog)
-	python -mwebbrowser http://max-one.local:9000
-
-production-monitoring-open: ## Open monitoring dashboards (UptimeRobot.com, Sentry.io and Grafana)
-	python -mwebbrowser https://stats.uptimerobot.com/OZAWPTWNA
-	python -mwebbrowser https://sentry.io/organizations/courses/issues/?project=1484857
-	python -mwebbrowser http://max-one.local:3000
-
-production-user-setup: ## Setup users on production e.g. to add new or updated SSH keys
-	cd workflow/production && ansible-playbook main.yml --tags "user"
-
-production-uptimerobot-setup: ## Setup monitors in UptimeRobot.com
-	cd workflow/production && ansible-playbook main.yml --tags "uptimerobot"
 
 
 staging-max-one-ssh: ## SSH into max-one
@@ -263,4 +186,90 @@ staging-dashboard-bearer-token-show: ## Show K8S dashboard bearer token for stag
 
 staging-dashboard-open: ## Open Dashboard
 	python -mwebbrowser http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/overview?namespace=default
+
+
+
+production-build-and-push: production-nginx-build-and-push production-varnish-build-and-push production-app-build-and-push production-phpmyadmin-build-and-push production-automysqlbackup-build-and-push production-rabbitmq-build-and-push production-redis-build-and-push production-memcached-build-and-push production-es-build-and-push production-db-build-and-push ## Build all docker images and push to private registry
+
+production-varnish-build-and-push: ## Build varnish docker image, tag and push to private registry
+	docker build -t varnish stack/varnish
+	docker tag varnish max-one.local:5001/courses/varnish:latest
+	docker push max-one.local:5001/courses/varnish
+
+production-nginx-build-and-push: ## Build nginx docker image, tag and push to private registry
+	docker build -t nginx stack/nginx
+	docker tag nginx max-one.local:5001/courses/nginx:latest
+	docker push max-one.local:5001/courses/nginx
+
+production-app-build-and-push: ## Build app docker image, tag and push to private registry
+	docker build -t app app
+	docker tag app max-one.local:5001/courses/app:latest
+	docker push max-one.local:5001/courses/app
+
+production-phpmyadmin-build-and-push: ## Build phpMyAdmin docker image, tag and push to private registry
+	docker build -t phpmyadmin stack/phpmyadmin
+	docker tag phpmyadmin max-one.local:5001/courses/phpmyadmin:latest
+	docker push max-one.local:5001/courses/phpmyadmin
+
+production-automysqlbackup-build-and-push: ## Build automysqlbackup docker image, tag and push to private registry
+	docker build -t automysqlbackup stack/automysqlbackup
+	docker tag automysqlbackup max-one.local:5001/courses/automysqlbackup:latest
+	docker push max-one.local:5001/courses/automysqlbackup
+
+production-rabbitmq-build-and-push: ## Build RabbitMQ docker image, tag and push to private registry
+	docker build -t rabbitmq stack/rabbitmq
+	docker tag rabbitmq max-one.local:5001/courses/rabbitmq:latest
+	docker push max-one.local:5001/courses/rabbitmq
+
+production-redis-build-and-push: ## Build Redis docker image, tag and push to private registry
+	docker build -t redis stack/redis
+	docker tag redis max-one.local:5001/courses/redis:latest
+	docker push max-one.local:5001/courses/redis
+
+production-memcached-build-and-push: ## Build Memcached docker image, tag and push to private registry
+	docker build -t memcached stack/memcached
+	docker tag memcached max-one.local:5001/courses/memcached:latest
+	docker push max-one.local:5001/courses/memcached
+
+production-es-build-and-push: ## Build Elasticsearch docker image, tag and push to private registry
+	docker build -t es stack/es
+	docker tag es max-one.local:5001/courses/es:latest
+	docker push max-one.local:5001/courses/es
+
+production-db-build-and-push: ## Build MariaDB docker image, tag and push to private registry
+	docker build -t db stack/db
+	docker tag db max-one.local:5001/courses/db:latest
+	docker push max-one.local:5001/courses/db
+
+production-build-and-deploy: build-and-push production-deploy ## Build all docker images and deploy to production
+
+production-deploy: ## Deploy to production without building first
+	cd workflow/production && ansible-playbook main.yml --tags "deploy"
+
+production-max-one-ssh: ## SSH into max-one
+	ssh courses@max-one.local
+
+production-open: production-logging-open ## Open services on production in your browser
+	python -mwebbrowser https://courses.20steps.de
+	python -mwebbrowser https://courses.20steps.de/wp-admin
+	python -mwebbrowser http://max-one.local:8081
+	python -mwebbrowser http://max-one.local:15672
+	python -mwebbrowser http://max-one.local:9000
+
+production-nginx-cert-renewal: ## Renew certs of nginx on production
+	cd workflow/production && ansible-playbook main.yml --tags "cert"
+
+production-logging-open: ## Open logging dashboard (graylog)
+	python -mwebbrowser http://max-one.local:9000
+
+production-monitoring-open: ## Open monitoring dashboards (UptimeRobot.com, Sentry.io and Grafana)
+	python -mwebbrowser https://stats.uptimerobot.com/OZAWPTWNA
+	python -mwebbrowser https://sentry.io/organizations/courses/issues/?project=1484857
+	python -mwebbrowser http://max-one.local:3000
+
+production-user-setup: ## Setup users on production e.g. to add new or updated SSH keys
+	cd workflow/production && ansible-playbook main.yml --tags "user"
+
+production-uptimerobot-setup: ## Setup monitors in UptimeRobot.com
+	cd workflow/production && ansible-playbook main.yml --tags "uptimerobot"
 
