@@ -9,8 +9,20 @@ mkdir -p ~/.ssh
 chmod 700 ~/.ssh
 ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
 
-if [! $(vendor/bin/wp core is-installed)]; then
-  vendor/bin/wp core install --url=${APP_WP_HOME} --title=Courses --admin_user=hhva --admin_password=secret --admin_email=helmuthva@googlemail.com --skip-email
+CMD_APP="vendor/bin/wp"
+
+APP_CHECK_INSTALLED="${CMD_APP} core is-installed"
+if eval $APP_CHECK_INSTALLED; then
+  echo "App already installed."
+else
+  echo "App not installed."
+  echo "Installing app ..."
+  $CMD_APP core install --url=${APP_WP_HOME} --title=Courses --admin_user=hhva --admin_password=secret --admin_email=helmuthva@googlemail.com --skip-email
+  if eval $APP_CHECK_INSTALLED; then
+    echo "Installing app done."
+  else
+    echo "Installing app failed."
+  fi
 fi
 
 ## Dump autoloader
@@ -19,10 +31,6 @@ cd /app && composer dump-autoload -o --apcu
 
 ## Switch back to root
 EOSU
-
-## Fix permissions again
-echo "Setting permisssions again ..."
-chmod -R 777 /app/var
 
 echo "Provisioning app done."
 
