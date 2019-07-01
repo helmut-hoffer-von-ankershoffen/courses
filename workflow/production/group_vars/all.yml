@@ -1,0 +1,74 @@
+---
+
+## App
+
+app:
+  name: 'Online Courses'
+  company:
+    name: 'Courses GmbH'
+  user:
+    name: 'courses'
+  group:
+    name: 'courses'
+  stack:
+    name: 'courses'
+  domain: 'courses.20steps.de'
+  webmaster:
+    name: 'Webmaster Courses'
+    email: 'hhva+courses@20steps.de'
+
+
+## Firewalling of internal services
+
+trusted_ips:
+  - '127.0.0.1'
+  - '192.168.100.0/24'
+  - '10.8.0.0/24'
+
+
+## Access to app user
+
+users:
+  - username: hhva
+    sudo: True
+
+
+## uptimerobot.com
+
+uptimerobot_api_key: "UPTIMEROBOT_API_KEY"
+
+# Get existing monitor IDs:
+# curl -X POST -H "Cache-Control: no-cache" -H "Content-Type: application/x-www-form-urlencoded" -d 'api_key=u752890-f13aaa6c6319f81e0fa71269&format=json' "https://api.uptimerobot.com/v2/getMonitors"
+# Get existing alert contact IDs:
+# curl -X POST -H "Cache-Control: no-cache" -H "Content-Type: application/x-www-form-urlencoded" -d 'api_key=u752890-f13aaa6c6319f81e0fa71269&format=json' "https://api.uptimerobot.com/v2/getAlertContacts"
+
+uptimerobot_deploy_monitor_ids:
+  - "782932267"
+  - "782932268"
+
+uptimerobot_targets:
+  - { name: "{{ app.name }} / Homepage", url: "https://{{ app.domain }}", state: "present"}
+
+# alert_contacts - optional (the alert contacts to be notified when the monitor goes up/down.Multiple alert_contact>ids can be sent like alert_contacts=457_0_0-373_5_0-8956_2_3 where alert_contact>ids are seperated with - and threshold + recurrence are seperated with _.
+# For ex: alert_contacts=457_5_0 refers to 457 being the alert_contact>id, 5 being the threshold and 0 being the recurrence. As the threshold and recurrence is only available in the Pro Plan, they are always 0 in the Free Plan)
+alert_contacts: "0752890"
+
+# alertcontact>type
+# 1 - SMS
+# 2 - E-mail
+# 3 - Twitter DM
+# 4 - Boxcar
+# 5 - Web-Hook
+# 6 - Pushbullet
+# 7 - Zapier
+# 9 - Pushover
+# 10 - HipChat
+# 11 - Slack
+
+# alertcontact>status
+# 0 - not activated
+# 1 - paused
+# 2 - active
+
+uptimerobot_alert_entries:
+  - { alert_name: "{{ app.webmaster.name }}",  alert_type: "2", status: "2", value: "{{ app.webmaster.email }}", state: "present" }

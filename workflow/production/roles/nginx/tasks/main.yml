@@ -1,0 +1,6 @@
+---
+
+- name: Prepare nginx directory for nginx/letsencrypt
+  file:
+    state: directory
+    path: '/mnt/gluster/{{ app.stack.name }}/volumes/nginx/letsencrypt'

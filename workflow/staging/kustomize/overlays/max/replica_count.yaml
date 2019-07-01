@@ -1,0 +1,10 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: app
+  labels:
+    app: app
+spec:
+  replicas: 1

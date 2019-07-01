@@ -1,0 +1,197 @@
+version: '3'
+services:
+
+  nginx:
+    image: max-one.localhost:5001/courses/nginx:latest
+    restart: always
+    environment:
+      - APP_DOMAIN=courses.20steps.de max-one.localhost
+      - APP_CERTBOT_NAME="courses.20steps.de"
+      - APP_CERTBOT_DOMAINS="-d courses.20steps.de"
+      - APP_CERTBOT_EMAIL="helmuthva@googlemail.com"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - '/mnt/gluster/courses/volumes/nginx/letsencrypt:/etc/letsencrypt'
+    links:
+      - varnish:varnish
+      - memcached:memcached
+    depends_on:
+      - varnish
+      - memcached
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  varnish:
+    image: max-one.localhost:5001/courses/varnish:latest
+    restart: always
+    links:
+      - app:app
+    depends_on:
+      - app
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  app:
+    image: max-one.localhost:5001/courses/app:latest
+    restart: always
+    user: application
+    environment:
+      - WEB_ALIAS_DOMAIN=courses.20steps.de
+      - APP_STAGE=production
+      - APP_MODE=prod
+      - APP_UNATTENDED_UPGRADE=true
+      - APP_INSTALL_SAMPLE_DATA=true
+      - APP_CRON=true
+      - APP_WP_DB_HOST=db
+      - APP_WP_DB_NAME=app
+      - APP_WP_DB_PREFIX=wp_
+      - APP_WP_DB_USER=root
+      - APP_WP_DB_PASSWORD=secret
+      - APP_WP_ENV=development
+      - APP_WP_HOME=https://courses.com
+      - APP_WP_SITEURL=https://courses.com/wp
+      - APP_WP_DISABLE_WP_CRON=false
+      - 'APP_WP_AUTH_KEY="_hze=m:Vjonnmhrxy/}C*!$$m./GYi$$9QV+pZ}[`)I@l+f.y6AZip*m>TMeci&I('
+      - 'APP_WP_SECURE_AUTH_KEY=">h>bcm-Z[oj4!}RV].1XaSo4K9_9#d9X^)Z(SJ/Eeg|6I![qB*Ds_ndlL@61R6{>"'
+      - 'APP_WP_LOGGED_IN_KEY="1?S1G&SsabFpssGUrT-?9j%P#;#_;Nt#=`.N>JFW_Mb}7K<nXjmZ0%OFHX])0mjX"'
+      - 'APP_WP_NONCE_KEY="{2f!&XepF,1mdM*}V8U@VY[,Wm>;]Iu]>eva&X>k6KWIdd@icJySfyNSRkLMB4;S"'
+      - 'APP_WP_AUTH_SALT="<RN.&jd{[6kn&A^fcnD[AGh`9^-}qbkB&{DIC?ciL0,m$$n5CP9f+)w4H1`{o3Ns9"'
+      - 'APP_WP_SECURE_AUTH_SALT="X_6Iiv_)RRv<K?m,H$$rdtq^1@-M!K5UIDCIc:WUP1esxWGbDsH)zC+33[Bp`o0tC"'
+      - 'APP_WP_LOGGED_IN_SALT="=!c+g<ckbNrgoY0}zFA9qw!.Zk$$djE*^Cq_,eo4<q[m#H1g%Pnmuk[nc[+UNSwL0"'
+      - 'APP_WP_NONCE_SALT="99M+xc]fpn;}7_Z@MnD>;83#o%|1{wyb_}a@bl?*+V{7]QlY8s_#@Rh=9,aZK@`Q"'
+    tmpfs:
+      - /app/generated
+      - /app/pub/static
+      - /app/var/composer_home
+      - /app/var/log
+      - /app/var/session
+      - /app/var/tmp
+      - /app/var/view_processed
+    volumes:
+      - '/mnt/gluster/courses/volumes/app/uploads:/app/pub/app/uploads'
+    links:
+      - rabbitmq:rabbitmq
+      - redis:redis
+      - es:es
+      - db:db
+    depends_on:
+      - rabbitmq
+      - redis
+      - es
+      - db
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  rabbitmq:
+    image: max-one.localhost:5001/courses/rabbitmq:latest
+    restart: always
+    ports:
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  redis:
+    image: max-one.localhost:5001/courses/redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  memcached:
+    image: max-one.localhost:5001/courses/memcached:latest
+    restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  es:
+    image: max-one.localhost:5001/courses/es:latest
+    restart: always
+    environment:
+      - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  db:
+    image: max-one.localhost:5001/courses/db:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=app
+    volumes:
+      - db-data:/var/lib/mysql
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  phpmyadmin:
+    image: max-one.localhost:5001/courses/phpmyadmin:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - PMA_USER=root
+      - PMA_PASSWORD=secret
+    ports:
+      - "8081:80"
+    links:
+      - db:db
+    depends_on:
+      - db
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://192.168.100.2:12201"
+
+  automysqlbackup:
+    image: max-one.localhost:5001/shop/automysqlbackup:latest
+    restart: always
+    environment:
+      - USERNAME=root
+      - PASSWORD=secret
+      - DBHOST=db
+      - DBNAMES=app
+      - DBEXCLUDE="performance_schema information_schema"
+      - CRON_SCHEDULE="23 0 * * *"
+    links:
+      - db:db
+    depends_on:
+      - db
+    volumes:
+      - '/mnt/gluster/courses/volumes/automysqlbackup/backup:/backup'
+
+volumes:
+  rabbitmq-data:
+    external: false
+  es-data:
+    external: false
+  db-data:
+    external: false

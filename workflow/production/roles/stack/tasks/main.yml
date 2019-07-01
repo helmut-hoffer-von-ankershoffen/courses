@@ -1,0 +1,21 @@
+---
+
+- name: Push docker-compose.yml
+  become: yes
+  become_user:  '{{ app.user.name }}'
+  copy:
+    src: docker-compose.yaml
+    dest: ~/docker-compose.yaml
+
+- name: Stack up!
+  become: yes
+  become_user: '{{ app.user.name }}'
+  docker_compose:
+    project_src: ~/
+    app.name: '{{ app.stack.name }}'
+    files: docker-compose.yaml
+    pull: yes
+    recreate: smart
+    restarted: no
+    remove_orphans: yes
+    state: present

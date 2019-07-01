@@ -1,0 +1,7 @@
+---
+
+- name: Renew certs
+  shell:
+    make nginx-cert-renewal
+  ignore_errors: true
+

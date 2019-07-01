@@ -1,0 +1,41 @@
+apiVersion: skaffold/v1beta11
+kind: Config
+build:
+  local: {}
+  tagPolicy:
+    sha256: {}
+#    gitCommit: {}
+  artifacts:
+  - image: max-one.local:5001/courses/nginx
+    context: stack/nginx
+  - image: max-one.local:5001/courses/memcached
+    context: stack/memcached
+  - image: max-one.local:5001/courses/varnish
+    context: stack/varnish
+  - image: max-one.local:5001/courses/app
+    context: app
+    sync:
+      manual:
+        - src: 'web/health.html'
+          dest: 'web'
+          strip: 'web'
+  - image: max-one.local:5001/courses/rabbitmq
+    context: stack/rabbitmq
+  - image: max-one.local:5001/courses/redis
+    context: stack/redis
+  - image: max-one.local:5001/courses/es
+    context: stack/es
+  - image: max-one.local:5001/courses/db
+    context: stack/db
+  - image: max-one.local:5001/courses/phpmyadmin
+    context: stack/phpmyadmin
+  - image: max-one.local:5001/courses/automysqlbackup
+    context: stack/automysqlbackup
+deploy:
+  kustomize:
+    path: workflow/staging/kustomize/overlays/max
+    flags:
+      global:
+        - "--namespace=courses"
+profiles:
+- name: max

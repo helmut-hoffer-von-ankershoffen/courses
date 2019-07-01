@@ -1,0 +1,74 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: courses
+  name: app-uploads-pvc
+  labels:
+    app: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: courses
+  name: rabbitmq-data-pvc
+  labels:
+    app: rabbitmq
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 512Mi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: courses
+  name: es-data-pvc
+  labels:
+    app: es
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: courses
+  name: db-data-pvc
+  labels:
+    app: db
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: courses
+  name: automysqlbackup-data-pvc
+  labels:
+    app: automysqlbackup
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

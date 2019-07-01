@@ -1,0 +1,194 @@
+version: '3'
+services:
+
+  nginx:
+    build: ./stack/nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - APP_DOMAIN=courses.localhost
+      - APP_CDN_DOMAIN=courses-2daa.kxcdn.com
+    tmpfs:
+      - /tmp
+      - /var/ngx_pagespeed_cache
+    links:
+      - varnish:varnish
+      - memcached:memcached
+    depends_on:
+      - varnish
+      - memcached
+
+  varnish:
+    build:
+      context: ./stack/varnish
+    restart: always
+    links:
+      - app:app
+    depends_on:
+      - app
+
+  app:
+    build: ./stack/app.development
+    restart: always
+    user: application
+    environment:
+      - WEB_ALIAS_DOMAIN=courses.localhost
+      - APP_STAGE=development
+      - APP_MODE=dev
+      - APP_UNATTENDED_UPGRADE=true
+      - APP_INSTALL_SAMPLE_DATA=true
+      - APP_CRON=true
+      - APP_WP_DB_HOST=db
+      - APP_WP_DB_NAME=app
+      - APP_WP_DB_PREFIX=wp_
+      - APP_WP_DB_USER=root
+      - APP_WP_DB_PASSWORD=secret
+      - APP_WP_ENV=development
+      - APP_WP_HOME=https://courses.localhost
+      - APP_WP_SITEURL=https://courses.localhost/wp
+      - APP_WP_DISABLE_WP_CRON=true
+      - 'APP_WP_AUTH_KEY="_hze=m:Vjonnmhrxy/}C*!$$m./GYi$$9QV+pZ}[`)I@l+f.y6AZip*m>TMeci&I('
+      - 'APP_WP_SECURE_AUTH_KEY=">h>bcm-Z[oj4!}RV].1XaSo4K9_9#d9X^)Z(SJ/Eeg|6I![qB*Ds_ndlL@61R6{>"'
+      - 'APP_WP_LOGGED_IN_KEY="1?S1G&SsabFpssGUrT-?9j%P#;#_;Nt#=`.N>JFW_Mb}7K<nXjmZ0%OFHX])0mjX"'
+      - 'APP_WP_NONCE_KEY="{2f!&XepF,1mdM*}V8U@VY[,Wm>;]Iu]>eva&X>k6KWIdd@icJySfyNSRkLMB4;S"'
+      - 'APP_WP_AUTH_SALT="<RN.&jd{[6kn&A^fcnD[AGh`9^-}qbkB&{DIC?ciL0,m$$n5CP9f+)w4H1`{o3Ns9"'
+      - 'APP_WP_SECURE_AUTH_SALT="X_6Iiv_)RRv<K?m,H$$rdtq^1@-M!K5UIDCIc:WUP1esxWGbDsH)zC+33[Bp`o0tC"'
+      - 'APP_WP_LOGGED_IN_SALT="=!c+g<ckbNrgoY0}zFA9qw!.Zk$$djE*^Cq_,eo4<q[m#H1g%Pnmuk[nc[+UNSwL0"'
+      - 'APP_WP_NONCE_SALT="99M+xc]fpn;}7_Z@MnD>;83#o%|1{wyb_}a@bl?*+V{7]QlY8s_#@Rh=9,aZK@`Q"'
+    ports:
+      - "8090:80"
+    tmpfs:
+      - /tmp
+    volumes:
+      - courses-app:/app:nocopy
+    links:
+      - rabbitmq:rabbitmq
+      - redis:redis
+      - es:es
+      - db:db
+    depends_on:
+      - rabbitmq
+      - redis
+      - es
+      - db
+
+  phpmyadmin:
+    build:
+      context: ./stack/phpmyadmin
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - PMA_USER=root
+      - PMA_PASSWORD=secret
+    ports:
+      - "8080:80"
+    links:
+      - db:db
+    depends_on:
+      - db
+
+  automysqlbackup:
+    build:
+      context: ./stack/automysqlbackup
+    restart: always
+    environment:
+      - USERNAME=root
+      - PASSWORD=secret
+      - DBHOST=db
+      - DBNAMES=app
+      - DBEXCLUDE="performance_schema information_schema"
+      - CRON_SCHEDULE="0 23 * * *"
+    links:
+      - db:db
+    depends_on:
+      - db
+    volumes:
+      - automysqlbackup-data:/backup
+
+  rabbitmq:
+    build:
+      context: ./stack/rabbitmq
+    ports:
+      - "15672:15672"
+    restart: always
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  redis:
+    build:
+      context: ./stack/redis
+    restart: always
+
+  memcached:
+    build:
+      context: ./stack/memcached
+    restart: always
+
+  es:
+    build:
+      context: ./stack/es
+    restart: always
+    environment:
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  db:
+    build:
+      context: ./stack/db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=app
+    volumes:
+      - db-data:/var/lib/mysql
+
+  app_infra_up:
+    image: dadarek/wait-for-dependencies
+    environment:
+      SLEEP_LENGTH: 1
+      TIMEOUT_LENGTH: 300
+    links:
+      - rabbitmq:rabbitmq
+      - redis:redis
+      - es:es
+      - db:db
+    depends_on:
+      - rabbitmq
+      - redis
+      - es
+      - db
+    command: rabbitmq:5672 redis:6379 es:9200 db:3306
+
+  app_wait_for:
+    image: dadarek/wait-for-dependencies
+    environment:
+      SLEEP_LENGTH: 1
+      TIMEOUT_LENGTH: 300
+    links:
+      - app:app
+    depends_on:
+      - app
+    command: app:80
+
+volumes:
+  courses-app:
+    external: true
+  rabbitmq-data:
+    external: false
+  es-data:
+    external: false
+  db-data:
+    external: false
+  automysqlbackup-data:
+    external: false

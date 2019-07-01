@@ -1,0 +1,7 @@
+---
+
+- name: Prepare uploads directory for app
+  file:
+    state: directory
+    path: '/mnt/gluster/{{ app.stack.name }}/volumes/app/uploads'
+    mode: '0777'

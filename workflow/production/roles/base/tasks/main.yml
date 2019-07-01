@@ -1,0 +1,9 @@
+---
+
+- name: Copy Makefile
+  become: yes
+  become_user: '{{ app.user.name }}'
+  copy:
+    src: Makefile
+    dest: ~/Makefile
+

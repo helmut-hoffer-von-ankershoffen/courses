@@ -1,0 +1,91 @@
+---
+
+- name: Start deploy
+  hosts: localhost
+  roles:
+    - role: deploy-start
+  tags: [deploy,deploy_start]
+
+- name: User management
+  hosts: all
+  roles:
+    - role: user
+  tags: [deploy,user]
+
+- name: Basic tooling
+  hosts: front
+  roles:
+    - role: base
+  tags: [deploy,base]
+
+- name: nginx
+  hosts: front
+  roles:
+    - role: nginx
+  tags: [deploy,nginx]
+
+- name: phpMyAdmin
+  hosts: front
+  roles:
+    - role: phpMyAdmin
+  tags: [deploy,phpMyAdmin]
+
+- name: automysqlbackup
+  hosts: front
+  roles:
+    - role: automysqlbackup
+  tags: [deploy,automysqlbackup]
+
+- name: app
+  hosts: front
+  roles:
+    - role: app
+  tags: [deploy,app]
+
+- name: RabbitMQ
+  hosts: front
+  roles:
+    - role: rabbitmq
+  tags: [deploy,rabbitmq]
+
+- name: Redis
+  hosts: front
+  roles:
+    - role: redis
+  tags: [deploy,redis]
+
+- name: Elasticsearch
+  hosts: front
+  roles:
+    - role: es
+  tags: [deploy,es]
+
+- name: MySQL
+  hosts: front
+  roles:
+    - role: mysql
+  tags: [deploy,mysql]
+
+- name: Docker stack
+  hosts: front
+  roles:
+    - role: stack
+  tags: [deploy,stack]
+
+- name: Finish deploy
+  hosts: localhost
+  roles:
+    - role: deploy-finish
+  tags: [deploy,deploy_finish]
+
+- name: uptimerobot.com
+  hosts: localhost
+  roles:
+    - role: uptimerobot-setup
+  tags: [uptimerobot]
+
+- name: nginx cert renewal
+  hosts: front
+  roles:
+    - role: nginx-cert-renewal
+  tags: [cert]

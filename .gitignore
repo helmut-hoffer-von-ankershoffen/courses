@@ -1,0 +1,6 @@
+.idea
+*~
+.DS_Store
+.com.apple.timemachine.supported
+.docker-sync
+.gitattributes

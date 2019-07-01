@@ -1,0 +1,7 @@
+---
+
+- name: Prepare backup directory for app
+  file:
+    state: directory
+    path: /mnt/gluster/{{ app.stack.name }}/volumes/automysqlbackup/backup
+    mode: '0777'

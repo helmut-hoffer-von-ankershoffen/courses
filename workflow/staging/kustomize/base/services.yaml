@@ -1,0 +1,144 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: http
+  - port: 443
+    name: https
+  selector:
+    app: nginx
+  type: LoadBalancer
+  loadBalancerIP: 12.0.0.205
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: memcached
+  labels:
+    app: memcached
+spec:
+  ports:
+  - port: 11211
+    name: memcache
+    protocol: "TCP"
+  selector:
+    app: memcached
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: varnish
+  labels:
+    app: courses
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: varnish
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: app
+  labels:
+    app: app
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: app
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+spec:
+  ports:
+  - port: 5672
+    name: rabbitmq
+    protocol: "TCP"
+  - port: 15672
+    name: http
+  selector:
+    app: rabbitmq
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: redis
+  labels:
+    app: redis
+spec:
+  ports:
+  - port: 6379
+    name: redis
+    protocol: "TCP"
+  selector:
+    app: redis
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: es
+  labels:
+    app: es
+spec:
+  ports:
+  - port: 9200
+    name: http
+  selector:
+    app: es
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: db
+  labels:
+    app: db
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+    protocol: "TCP"
+  selector:
+    app: db
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: courses
+  name: phpmyadmin
+  labels:
+    app: phpmyadmin
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: db

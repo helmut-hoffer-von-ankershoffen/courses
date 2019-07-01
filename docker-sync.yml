@@ -1,0 +1,19 @@
+---
+version: '2'
+
+options:
+  # optional, activate this if you need to debug something, default is false
+  # IMPORTANT: do not run stable with this, it creates a memory leak, turn off verbose when you are done testing
+  verbose: false
+  # optional, maximum number of attempts for unison waiting for the success exit status. The default is 5 attempts (1-second sleep for each attempt). Only used in unison.
+  max_attempt: 5
+
+syncs:
+  courses-app:
+    host_disk_mount_mode: 'cached'
+    sync_strategy: 'native_osx'
+    sync_userid: '1000'
+    src: './app/'
+    sync_excludes: ['.git/', '.gitignore', 'Dockerfile', '.dockerignore', 'container/' ]
+    watch_excludes: ['.*/.git', '.gitignore', 'Dockerfile', '.dockerignore', 'container/' ]
+    sync_prefer: 'src'

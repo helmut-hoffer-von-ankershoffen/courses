@@ -1,0 +1,540 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      initContainers:
+      - name: dependencies
+        image: dadarek/wait-for-dependencies
+        env:
+        - name: SLEEP_LENGTH
+          value: "5"
+        - name: TIMEOUT_LENGTH
+          value: "600"
+        args: ['memcached.courses.svc.cluster.local:11211','varnish.courses.svc.cluster.local:80']
+      containers:
+      - name: nginx
+        image: max-one.local:5001/courses/nginx
+        env:
+        - name: MEMCACHED_HOST
+          value: 'memcached.courses.svc.cluster.local'
+        - name: APP_UPSTREAM_HOST
+          value: 'varnish.courses.svc.cluster.local'
+        - name: APP_DOMAIN
+          value: 'courses.maxxx.pro'
+        - name: APP_CDN_DOMAIN
+          value: 'courses-2daa.kxcdn.com'
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 60
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: memcached
+  labels:
+    app: memcached
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memcached
+  template:
+    metadata:
+      labels:
+        app: memcached
+    spec:
+      containers:
+      - name: memcached
+        image: max-one.local:5001/courses/memcached
+        ports:
+        - containerPort: 11211
+          name: memcache
+        readinessProbe:
+          tcpSocket:
+            port: 11211
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        livenessProbe:
+          tcpSocket:
+            port: 11211
+          initialDelaySeconds: 30
+          periodSeconds: 60
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: varnish
+  labels:
+    app: varnish
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: varnish
+  template:
+    metadata:
+      labels:
+        app: varnish
+    spec:
+      initContainers:
+      - name: dependencies
+        image: dadarek/wait-for-dependencies
+        env:
+        - name: SLEEP_LENGTH
+          value: "5"
+        - name: TIMEOUT_LENGTH
+          value: "600"
+        args: ['app.courses.svc.cluster.local:80']
+      containers:
+      - name: varnish
+        image: max-one.local:5001/courses/varnish
+        env:
+        - name: VARNISH_BACKEND_HOST
+          value: 'app.courses.svc.cluster.local'
+        - name: VARNISH_BACKEND_PROBE_HOST
+          value: 'app.courses.svc.cluster.local'
+        ports:
+        - containerPort: 80
+          name: http
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 2
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 2
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: app
+  labels:
+    app: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      initContainers:
+      - name: dependencies
+        image: dadarek/wait-for-dependencies
+        env:
+        - name: SLEEP_LENGTH
+          value: "5"
+        - name: TIMEOUT_LENGTH
+          value: "600"
+        args: ['rabbitmq.courses.svc.cluster.local:5672','redis.courses.svc.cluster.local:6379','es.courses.svc.cluster.local:9200','db.courses.svc.cluster.local:3306']
+      containers:
+      - name: app
+        image: max-one.local:5001/courses/app
+        env:
+        - name: WEB_ALIAS_DOMAIN
+          value: "courses.maxxx.pro"
+        - name: APP_STAGE
+          value: "development"
+        - name: APP_MODE
+          value: "dev"
+        - name: APP_UNATTENDED_UPGRADE
+          value: "true"
+        - name: APP_INSTALL_SAMPLE_DATA
+          value: "true"
+        - name: APP_CRON
+          value: "true"
+        - name: APP_RABBITMQ_HOST
+          value: "rabbitmq.courses.svc.cluster.local"
+        - name: APP_REDIS_HOST
+          value: "redis.courses.svc.cluster.local"
+        - name: APP_DB_HOST
+          value: "db.courses.svc.cluster.local"
+        - name: APP_ES_HOST
+          value: "es.courses.svc.cluster.local"
+        - name: APP_WP_DB_HOST
+          value: "db"
+        - name: APP_WP_DB_NAME
+          value: "app"
+        - name: APP_WP_DB_PREFIX
+          value: "wp_"
+        - name: APP_WP_DB_USER
+          value: "root"
+        - name: APP_WP_DB_PASSWORD
+          value: "secret"
+        - name: APP_WP_ENV
+          value: "development"
+        - name: APP_WP_HOME
+          value: "https://courses.maxxx.pro"
+        - name: APP_WP_SITEURL
+          value: "https://courses.maxxx.pro/wp"
+        - name: APP_WP_DISABLE_WP_CRON
+          value: "false"
+        - name: APP_WP_AUTH_KEY
+          value: "_hze^=m:Vjonnmhrxy/}C*!$m./GYi$9QV+pZ}[`)I@l+f.y6AZip*m>TMeci&I("
+        - name: APP_WP_SECURE_AUTH_KEY
+          value: "APP_WP_SECURE_AUTH_KEY"
+        - name: APP_WP_LOGGED_IN_KEY
+          value: "1?S1G&SsabFpssGUrT-?9j%P#;#_;Nt#=`.N>JFW_Mb}7K<nXjmZ0%OFHX])0mjX"
+        - name: APP_WP_NONCE_KEY
+          value: "{2f!&XepF,1mdM*}V8U@VY[,Wm>;]Iu]>eva&X>k6KWIdd@icJySfyNSRkLMB4;S"
+        - name: APP_WP_AUTH_SALT
+          value: "<RN.&jd{[6kn&A^fcnD[AGh`9^-}qbkB&{DIC?ciL0,m$n5CP9f+)w4H1`{o3Ns9"
+        - name: APP_WP_SECURE_AUTH_SALT
+          value: "APP_WP_SECURE_AUTH_SALT"
+        - name: APP_WP_LOGGED_IN_SALT
+          value: "=!c+g<ckbNrgoY0}zFA9qw!.Zk$djE*^Cq_,eo4<q[m#H1g%Pnmuk[nc[+UNSwL0"
+        - name: APP_WP_NONCE_SALT
+          value: "99M+xc]fpn;}7_Z@MnD>;83#o%|1{wyb_}a@bl?*+V{7]QlY8s_#@Rh=9,aZK@`Q"
+        resources:
+          limits:
+            memory: "1Gi"
+          requests:
+            memory: "1Gi"
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+          - name: uploads
+            mountPath: /app/pub/app/uploads
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 2
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 2
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: app-uploads-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: max-one.local:5001/courses/rabbitmq
+        ports:
+        - containerPort: 5672
+          name: rabbitmq
+        - containerPort: 15672
+          name: http
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/rabbitmq
+        readinessProbe:
+          tcpSocket:
+            port: 5672
+          initialDelaySeconds: 120
+          periodSeconds: 60
+        livenessProbe:
+          tcpSocket:
+            port: 5672
+          initialDelaySeconds: 120
+          periodSeconds: 60
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: rabbitmq-data-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: max-one.local:5001/courses/redis
+        ports:
+        - containerPort: 6379
+          name: redis
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 60
+          periodSeconds: 60
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 60
+          periodSeconds: 60
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: es
+  labels:
+    app: es
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: es
+    spec:
+      terminationGracePeriodSeconds: 60
+      initContainers:
+      - name: increase-the-vm-max-map-count
+        image: busybox
+        args:
+        - sysctl
+        - -w
+        - vm.max_map_count=262144
+        securityContext:
+          privileged: true
+      - name: increase-the-ulimit
+        image: busybox
+        args:
+        - sh
+        - -c
+        - ulimit -n 65536
+        securityContext:
+          privileged: true
+      containers:
+      - name: es
+        image: max-one.local:5001/courses/es
+        env:
+        - name: ES_JAVA_OPTS
+          value: "-Xms1048m -Xmx1048m"
+        resources:
+          limits:
+            memory: "1500Mi"
+          requests:
+            memory: "1500Mi"
+        ports:
+        - containerPort: 9200
+          name: http
+        readinessProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 120
+          periodSeconds: 60
+        livenessProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 120
+          periodSeconds: 60
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: es-data-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: db
+  labels:
+    app: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: max-one.local:5001/courses/db
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: secret
+        - name: MYSQL_DATABASE
+          value: app
+        resources:
+          limits:
+            memory: "512Mi"
+          requests:
+            memory: "512Mi"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: db-data-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: phpmyadmin
+  labels:
+    app: phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phpmyadmin
+  template:
+    metadata:
+      labels:
+        app: phpmyadmin
+    spec:
+      initContainers:
+      - name: dependencies
+        image: dadarek/wait-for-dependencies
+        env:
+        - name: SLEEP_LENGTH
+          value: "5"
+        - name: TIMEOUT_LENGTH
+          value: "600"
+        args: ['db.courses.svc.cluster.local:3306']
+      containers:
+      - name: phpmyadmin
+        image: max-one.local:5001/courses/phpmyadmin
+        env:
+        - name: PMA_HOST
+          value: 'db.courses.svc.cluster.local'
+        ports:
+        - containerPort: 80
+          name: http
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 60
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: automysqlbackup
+  labels:
+    app: automysqlbackup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: automysqlbackup
+  template:
+    metadata:
+      labels:
+        app: automysqlbackup
+    spec:
+      initContainers:
+        - name: dependencies
+          image: dadarek/wait-for-dependencies
+          env:
+            - name: SLEEP_LENGTH
+              value: "5"
+            - name: TIMEOUT_LENGTH
+              value: "600"
+          args: ['db.courses.svc.cluster.local:3306']
+      containers:
+        - name: automysqlbackup
+          image: max-one.local:5001/courses/automysqlbackup
+          env:
+            - name: USERNAME
+              value: "root"
+            - name: PASSWORD
+              value: "secret"
+            - name: DBHOST
+              value: "db"
+            - name: DBNAMES
+              value: "app"
+            - name: DBEXCLUDE
+              value: "performance_schema information_schema"
+            - name: CRON_SCHEDULE
+              value: "0 0 * * *"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: automysqlbackup-data-pvc

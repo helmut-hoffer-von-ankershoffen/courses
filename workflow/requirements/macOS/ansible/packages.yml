@@ -1,0 +1,65 @@
+---
+
+homebrew_taps:
+  - homebrew/core
+  - homebrew/services
+  - blackfireio/blackfire
+  - jenkins-x/jx
+
+homebrew_installed_packages:
+  - bash-completion
+  - composer
+  - ctop
+  - curl
+  - git
+  - gpg
+  - jx
+  - node
+  - npm
+  - php
+  - pkg-config
+  - python
+  - python3
+  - python@2
+  - rsync
+  - skaffold
+  - slackcat
+  - telnet
+  - wget
+  - rust
+  - yarn
+
+homebrew_cask_appdir: /Applications
+
+homebrew_cask_apps:
+  - docker                  # Docker for Mac
+  - sublime-text            # Simple editor
+  - sequel-pro              # UI for SQL
+  - java                    # Java runtime
+  - tunnelblick             # VPN Client
+  - jetbrains-toolbox       # Installer for PHPstorm etc.
+  - google-chrome           # Common browser
+  - github                  # UI for Git/GitHub
+  - cyberduck               # FTP Client
+
+composer_packages:
+  - name: hirak/prestissimo
+    state: latest
+
+gem_packages:
+  - name: bundler
+  - name: docker-sync
+
+npm_packages: []
+
+pip_packages:
+  - name: kube-shell
+
+pear_packages: []
+
+cargo_packages:
+  - name: quick
+
+download_executables:
+  - url: https://files.magerun.net/n98-magerun2.phar
+    dest: /usr/local/bin/n98-magerun2

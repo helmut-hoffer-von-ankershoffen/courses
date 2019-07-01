@@ -1,0 +1,43 @@
+---
+
+- name: Check all hosts accessible
+  assert:
+    that:
+      - ansible_play_hosts == ansible_play_hosts_all
+
+- name: Force facts gathering
+  setup:
+
+- name: 'Setup {{ app.group.name }} group'
+  group:
+    name: '{{ app.group.name }}'
+
+- name: "Setup {{ app.user.name }} user and assign to groups"
+  user:
+    name: '{{ app.user.name }}'
+    shell: '/bin/bash'
+    groups:
+      - docker
+      - '{{ app.group.name }}'
+    append: yes
+    comment: 'managed by ansible'
+
+- name: Upload authorized keys
+  authorized_key:
+    user: '{{ item.username }}'
+    key: "{{ lookup('file', 'files/{{ item.username }}.pub') }}"
+  with_items: '{{users}}'
+
+- name: Setup users and assign to wheel and docker group
+  user:
+    name: '{{ item.username }}'
+    shell: '/bin/bash'
+    groups:
+      - docker
+      - wheel
+    append: yes
+    comment: 'managed by ansible'
+  with_items: '{{ users }}'
+
+
+

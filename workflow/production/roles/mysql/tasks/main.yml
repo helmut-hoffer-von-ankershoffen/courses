@@ -1,0 +1,13 @@
+---
+
+- name: Allow access from trusted ips
+  ufw:
+    direction: in
+    port: '3306'
+    src: '{{ item }}'
+    proto: tcp
+    rule: allow
+    state: enabled
+  with_items: '{{ trusted_ips}}'
+
+
