@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+    echo "Finding latest snapshot ..."
+    SNAPSHOT=$(find /backup/latest/ -type f -exec stat -c "%n" {} + | sort -r | head -n1)
+    if [ "$SNAPSHOT" = "" ]; then
+        echo "No latest snapshot found, exiting."
+        exit
+    fi
+    echo "Found latest snapshot $SNAPSHOT."
+else
+    SNAPSHOT="$1"
+    echo "Finding snapshot $SNAPSHOT ..."
+    if test -f "$SNAPSHOT"; then
+        echo "Found snapshot $SNAPSHOT"
+    else
+        echo "No snapshot $SNAPSHOT found, exiting."
+        exit
+    fi
+fi
+
+echo "Importing snapshot $SNAPSHOT ..."
+zcat $SNAPSHOT | mysql -u$USERNAME -p$PASSWORD -h$DBHOST $DBNAMES
+echo "Importing snapshot $SNAPSHOT done."

@@ -6,3 +6,6 @@ MAINTAINER Helmut Hoffer von Ankershoffen <helmuthva@googlemail.com>
 RUN apt-get update && \
     apt-get install -y apt-utils software-properties-common procps less nano vim telnet iputils-ping && \
     apt-get clean
+
+# Copy additions
+COPY /container/ /

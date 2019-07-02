@@ -75,6 +75,7 @@ services:
       - /app/var/view_processed
     volumes:
       - '/mnt/gluster/courses/volumes/app/uploads:/app/pub/app/uploads'
+      - '/mnt/gluster/courses/volumes/automysqlbackup/backup:/backup/db'
     links:
       - rabbitmq:rabbitmq
       - redis:redis
@@ -172,7 +173,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   automysqlbackup:
-    image: max-one.localhost:5001/shop/automysqlbackup:latest
+    image: max-one.localhost:5001/courses/automysqlbackup:latest
     restart: always
     environment:
       - USERNAME=root
@@ -181,7 +182,7 @@ services:
       - DBNAMES=app
       - DBEXCLUDE="performance_schema information_schema"
       - CRON_SCHEDULE="23 0 * * *"
-      - LATEST="yes"
+      - LATEST=yes
     links:
       - db:db
     depends_on:
@@ -190,7 +191,7 @@ services:
       - '/mnt/gluster/courses/volumes/automysqlbackup/backup:/backup'
 
   borg:
-    image: max-one.localhost:5001/shop/borg:latest
+    image: max-one.localhost:5001/courses/borg:latest
     restart: always
     environment:
       BORGBACKUP_CLIENT_HOSTNAME: 'courses.production'
@@ -225,8 +226,9 @@ services:
         -----END RSA PRIVATE KEY-----
       BORGBACKUP_RSA_PUBLIC: |-
         ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmfCZ4RXXpOp8ikuTI7/DBSHNdoNqmKxAODUhEvOeMtjdUwqD7EduLTECfkI/aRfPnK7vnOYj2SJH2N8ZyoTQKdR4KMmAgBxtGMmB4/7qwHOnV+B/XgpwZLk581OBNfMWMRBNRGeJibNFw/Ovo5jkl5Z5W/8FoB9wIQhHgqCmfVYMTj33aboeORgHdqWpb85TfNsVMBm4nNkJKUgAhsWEp4RomGRnmOUcCHOpF6EcWs4GPAOir8u9kCIOfe0TQWmHMnDhTzXw7AyB4BvztBK8Xi8GsDHkrDSmX+FWsk1uJxWe83qxmIF9bIWcBkcLrMg+k70ekGgyraSSbjUQIFFzx root@courses
+      BORGBACKUP_EXTRACT_AUTO_PATHS: 'var/borg/automysqlbackup/data'
     volumes:
-      - '/mnt/gluster/courses/volumes/automysqlbackup/backup:/var/borg/automysqlbackup/data'
+      - '/mnt/gluster/courses/volumes/automysqlbackup/backup:/var/borg/automysqlbackup/backup'
       - '/mnt/gluster/courses/volumes/app/uploads:/var/borg/app/uploads'
 
 volumes:

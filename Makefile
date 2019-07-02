@@ -109,7 +109,7 @@ stack-down: ## Teardown the stack
 stack-restart: stack-down stack-up ## Restart stack
 
 stack-volumes-remove: ## Remove rabbitmq, es and db volume thus resetting the database - the stack must be down for this
-	docker volume rm courses_db-data courses_es-data courses_rabbitmq-data courses_automysqlbackup-data
+	docker volume rm courses_db-data courses_es-data courses_rabbitmq-data courses_automysqlbackup-backup
 
 stack-pause: ## Pause all services in the stack
 	docker-compose -p courses pause
@@ -158,6 +158,44 @@ phpmyadmin-open: ## Open phpMyAdmin in your browser
 
 rabbitmq-open: ## Open RabbitMQ management UI in your browser
 	python -mwebbrowser http://courses.localhost:15672
+
+
+
+backup-now: ## Backup database and media to external storage
+	@echo "Backing up ..."
+	@echo "Taking snapshot of database ..."
+	@docker-compose -p courses exec automysqlbackup automysqlbackup
+	@echo "Backing up database and media to external storage ..."
+	@docker-compose -p courses exec borg borg-backup backup
+	@echo "Backing up done."
+
+backup-db-snapshot-local-list: ## List *local* db snapshots
+	@docker-compose -p courses exec automysqlbackup find /backup -maxdepth 3 -ls
+
+backup-db-snapshot-local-import-latest: ## Import latest *local* db snapshot
+	@echo "Importing latest local database snapshot ..."
+	@docker-compose -p courses exec automysqlbackup automysqlrestore
+	@echo "Importing latest local database snapshot done."
+
+backup-db-snapshot-local-import-specific: ## Import specific *local* db snapshot
+	@echo "Importing local database snapshot $(filter-out $@,$(MAKECMDGOALS)) ..."
+	@docker-compose -p courses exec automysqlbackup automysqlrestore $(filter-out $@,$(MAKECMDGOALS))
+	@echo "Importing local database snapshot done."
+
+backup-archive-list: ## List backup archives
+	@docker-compose -p courses exec borg borg-backup list
+
+backup-archive-extract-latest: ## Extract latest archive from external storage
+	@echo "Extracting latest archive from external storage ..."
+	@docker-compose -p courses exec borg borg-backup extract-files-latest var
+	@echo "Extracting latest archive from external storage done."
+
+backup-archive-extract-specific: ## Extract latest archive from external storage
+	@echo "Extracting archive $(filter-out $@,$(MAKECMDGOALS)) from external storage ..."
+	@docker-compose -p courses exec borg borg-backup extract-files-specific $(filter-out $@,$(MAKECMDGOALS)) var
+	@echo "Extracting archive $(filter-out $@,$(MAKECMDGOALS)) from external storage done."
+
+backup-restore-latest: backup-archive-extract-latest backup-db-snapshot-local-import-latest ## Extract latest archive from external storage and import latest database snapshot found in it
 
 
 staging-max-one-ssh: ## SSH into max-one

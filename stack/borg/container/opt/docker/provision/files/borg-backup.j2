@@ -1,8 +1,7 @@
 #!/bin/bash
 
-if [ -z "$1" ] || [ ! -z "$2" ]
-  then
-    printf "Possible: info | init | list | backup | mount \n\n"
+if [ -z "$1" ]; then
+    printf "Possible: info | init | list | backup | mount | list-files-detailed | list-files-latest | extract-files-latest | extract-files-specific | extract-files-detailed \n\n"
 fi
 
 # Sourcing the backup-passphrase
@@ -11,99 +10,151 @@ fi
 
 # Small helper commands, like listing backups, will help us in the future :)
 
-if [ "$1" = "info" ]
-  then
+if [ "$1" = "info" ]; then
     if [ -z "$2" ]; then printf "run $0 with list and use the backup-tag to request information\n"; exit 1; fi
-{% for b in borgbackup_servers %}
-{% if b.type == 'hetzner' %}
-    REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% else %}
-    REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% endif %}
-    /usr/local/bin/borg info {{ b.options }} $REPOSITORY::$2
-{% endfor %}
+    {% for b in borgbackup_servers %}
+    {% if b.type == 'hetzner' %}
+        REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+    {% else %}
+        REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+    {% endif %}
+        /usr/local/bin/borg info {{ b.options }} $REPOSITORY::$2
+    {% endfor %}
     exit 0
 fi
 
-if [ "$1" = "mount" ]
-  then
+if [ "$1" = "mount" ]; then
     if [ -z "$2" ]; then printf "Select the backup-server\n"; exit 1; fi
     if [ -z "$3" ]; then printf "Select the backup to mount\n"; exit 1; fi
     if [ -z "$4" ]; then printf "Select the path to mount the backup on\n"; exit 1; fi
-{% for b in borgbackup_servers %}
-{% if b.type == 'hetzner' %}
-    REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% else %}
-    REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% endif %}
-    /usr/local/bin/borg mount {{ b.options }} $REPOSITORY::$3 $4
-    if [ "$?" = "0" ]; then printf "Backup mounted on $4, do not forget to unmount!\n"; fi
+    {% for b in borgbackup_servers %}
+    {% if b.type == 'hetzner' %}
+        REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+    {% else %}
+        REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+    {% endif %}
+        /usr/local/bin/borg mount {{ b.options }} $REPOSITORY::$3 $4
+        if [ "$?" = "0" ]; then printf "Backup mounted on $4, do not forget to unmount!\n"; fi
+        exit 0
+    {% endfor %}
     exit 0
-{% endfor %}
 fi
 
-if [ "$1" = "list" ]
-  then
-{% for b in borgbackup_servers %}
-{% if b.type == 'hetzner' %}
-    REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% else %}
-    REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% endif %}
-    if [ -z "$2" ]; then
+if [ "$1" = "list" ]; then
+    {% for b in borgbackup_servers %}
+        {% if b.type == 'hetzner' %}
+            REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+        {% else %}
+            REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+        {% endif %}
         printf "Archives in $REPOSITORY:\n"
         /usr/local/bin/borg list {{ b.options }} -v $REPOSITORY
-    else
-        printf "Files in $REPOSITORY::$2:\n"
-        /usr/local/bin/borg list {{ b.options }} -v $REPOSITORY::$2
-    fi
-{% endfor %}
+    {% endfor %}
     exit 0
 fi
 
-if [ "$1" = "init" ]
-  then
-{% for b in borgbackup_servers %}
-{% if b.type == 'hetzner' %}
-    REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% else %}
-    REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% endif %}
-    /usr/local/bin/borg init --encryption={{ borgbackup_encryption_mode }}{% if borgbackup_appendonly_repoconfig %} --append-only{% endif %} {{ b.options }} $REPOSITORY
-{% endfor %}
+if [ "$1" = "init" ]; then
+    {% for b in borgbackup_servers %}
+        {% if b.type == 'hetzner' %}
+            REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+        {% else %}
+            REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+        {% endif %}
+            /usr/local/bin/borg init --encryption={{ borgbackup_encryption_mode }}{% if borgbackup_appendonly_repoconfig %} --append-only{% endif %} {{ b.options }} $REPOSITORY
+    {% endfor %}
     exit 0
 fi
 
-if [ "$1" = "backup" ]
-  then
+
+
+if [ "$1" = "backup" ]; then
     date=`date +%Y%m%d-%H%M`
-
     # Running some commands pre-backup
-{% for precommand in borgbackup_pre_commands %}
-    {{ precommand }}
-{% endfor %}
-
-{% for b in borgbackup_servers %}
-    printf "Backing up to {{ b.fqdn }} :\n"
-{% if b.type == 'hetzner' %}
-    REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% else %}
-    REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
-{% endif %}
-
-    /usr/local/bin/borg create --progress --compression {{ borgbackup_compression }} --stats {{ b.options }} $REPOSITORY::$date {% for dir in borgbackup_include %}{{ dir }} {% endfor %} {% for dir in borgbackup_exclude %} --exclude '{{ dir }}'{% endfor %}
-
-    if [ "$?" -eq "0" ]; then printf "Backup succeeded on $date to {{ b.fqdn }}\n" >> /var/log/borg-backup.log; fi
-
-  {% if not borgbackup_appendonly %}
-    # prune old backups
-    /usr/local/bin/borg prune {{ b.options }} -v $REPOSITORY -H {{ borgbackup_retention.hourly }} -d {{ borgbackup_retention.daily }} -w {{ borgbackup_retention.weekly }} -m {{ borgbackup_retention.monthly }} -y {{ borgbackup_retention.yearly }}
-  {% endif %}
-{% endfor %}
-
+    {% for precommand in borgbackup_pre_commands %}
+        {{ precommand }}
+    {% endfor %}
+    {% for b in borgbackup_servers %}
+        printf "Backing up to {{ b.fqdn }} :\n"
+        {% if b.type == 'hetzner' %}
+            REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+        {% else %}
+            REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+        {% endif %}
+        /usr/local/bin/borg create --progress --compression {{ borgbackup_compression }} --stats {{ b.options }} $REPOSITORY::$date {% for dir in borgbackup_include %}{{ dir }} {% endfor %} {% for dir in borgbackup_exclude %} --exclude '{{ dir }}'{% endfor %}
+        if [ "$?" -eq "0" ]; then printf "Backup succeeded on $date to {{ b.fqdn }}\n" >> /var/log/borg-backup.log; fi
+        {% if not borgbackup_appendonly %}
+            # prune old backups
+            /usr/local/bin/borg prune {{ b.options }} -v $REPOSITORY -H {{ borgbackup_retention.hourly }} -d {{ borgbackup_retention.daily }} -w {{ borgbackup_retention.weekly }} -m {{ borgbackup_retention.monthly }} -y {{ borgbackup_retention.yearly }}
+        {% endif %}
+    {% endfor %}
     # Running some commands post-backup
-{% for postcommand in borgbackup_post_commands %}
-    {{ postcommand }}
-{% endfor %}
+    {% for postcommand in borgbackup_post_commands %}
+        {{ postcommand }}
+    {% endfor %}
+    exit 0
+fi
 
+if [ "$1" = "list-files-detailed" ]; then
+    if [ -z "$2" ] || [ -z "$3" ]; then
+        printf "2nd argument is repository, 3rd argument is archive - use list to find them.\n"
+    else
+        printf "Files in $2::$3:\n"
+        /usr/local/bin/borg list -v $2::$3
+    fi
+    exit 0
+fi
+
+if [ "$1" = "list-files-latest" ]; then
+    if [ -z "$2" ]; then
+        printf "2nd argument is repository - use list to find them.\n"
+    else
+        ARCHIVE=$(/usr/local/bin/borg list --last 1 $2 | awk '{print $1}')
+        printf "Files in $2::$ARCHIVE:\n"
+        /usr/local/bin/borg list -v $2::$ARCHIVE
+    fi
+    exit 0
+fi
+
+if [ "$1" = "extract-files-latest" ]; then
+    if [ -z "$2" ]; then
+        printf "2nd argument is path - use list-files to enumerate them.\n"
+    else
+        {% for b in borgbackup_servers %}
+            printf "Extracting from to {{ b.fqdn }} :\n"
+            {% if b.type == 'hetzner' %}
+                REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+            {% else %}
+                REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+            {% endif %}
+            ARCHIVE=$(/usr/local/bin/borg list --last 1 $REPOSITORY | awk '{print $1}')
+            cd / && /usr/local/bin/borg extract --list -v $REPOSITORY::$ARCHIVE $2
+        {% endfor %}
+    fi
+    exit 0
+fi
+
+if [ "$1" = "extract-files-specific" ]; then
+    if [ -z "$2" ] || [ -z "$3" ]; then
+        printf "2nd argument is archive, 3rd argument is path - use list and list-files to enumerate them.\n"
+    else
+        {% for b in borgbackup_servers %}
+            printf "Extracting from to {{ b.fqdn }} :\n"
+            {% if b.type == 'hetzner' %}
+                REPOSITORY=ssh://{{ b.user }}@{{ b.fqdn }}:23/./{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+            {% else %}
+                REPOSITORY={{ b.user }}@{{ b.fqdn }}:{{ b.home }}{{ b.pool }}/{{ env("BORGBACKUP_CLIENT_HOSTNAME") }}
+            {% endif %}
+            cd / && /usr/local/bin/borg extract --list -v $REPOSITORY::$2 $3
+        {% endfor %}
+    fi
+    exit 0
+fi
+
+if [ "$1" = "extract-files-detailed" ]; then
+    if [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+        printf "2nd argument is repository, 3rd argument is archive, 4th argument is path to extract - use list and list-files to enumerate them.\n"
+    else
+        cd / && /usr/local/bin/borg extract --list -v $2::$3 $4
+    fi
+    exit 0
 fi

@@ -233,6 +233,8 @@ spec:
         volumeMounts:
           - name: uploads
             mountPath: /app/pub/app/uploads
+          - name: automysqlbackup-backup
+            mountPath: /backup/db
         readinessProbe:
           tcpSocket:
             port: 80
@@ -247,6 +249,9 @@ spec:
         - name: uploads
           persistentVolumeClaim:
             claimName: app-uploads-pvc
+        - name: automysqlbackup-backup
+          persistentVolumeClaim:
+            claimName: automysqlbackup-backup-pvc
 
 ---
 apiVersion: apps/v1
@@ -537,12 +542,12 @@ spec:
             - name: LATEST
               value: "yes"
           volumeMounts:
-            - name: data
+            - name: backup
               mountPath: /backup
       volumes:
-        - name: data
+        - name: backup
           persistentVolumeClaim:
-            claimName: automysqlbackup-data-pvc
+            claimName: automysqlbackup-backup-pvc
 
 ---
 apiVersion: apps/v1
@@ -601,15 +606,17 @@ spec:
                 -----END RSA PRIVATE KEY-----
             - name: BORGBACKUP_RSA_PUBLIC
               value: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDs1o5JQT2eNOWzX/Y6Gil2VM+8Qf657hBxqe4X7BH+0p3FxfvRT3lhddhZcLd3A/fuv2PA8UIAbePtjxxBbX4ceoPIGPcrGzlVUsvHqbiS3YqbfWsn9Pwplbv2z3MWtbeMeKFfGx/4DD+wYawlCY8kXE9AXGnl7tdUsYXbV9nA4mJImYot2fYiHsuyLyKOMEb6f3bB9CGXGWxztsTVP9ju7XWvEcJzBTkjb3PDGlOxK/qv47+mdx8gzuNB4yqWxg1SMMWGao6BsZNYADjHnxSjBHGgCYpKVA4sPWNDYXA+pZMwM7C9loa6/rxsdxXH+jtDxekgbbZiovewsfnvI7GV root@courses"
+            - name: BORGBACKUP_EXTRACT_AUTO_PATHS
+              value: "var/borg/automysqlbackup/backup"
           volumeMounts:
-            - name: automysqlbackup-data
-              mountPath: /var/borg/automysqlbackup/data
+            - name: automysqlbackup-backup
+              mountPath: /var/borg/automysqlbackup/backup
             - name: app-uploads
               mountPath: /var/borg/app/uploads
       volumes:
-        - name: automysqlbackup-data
+        - name: automysqlbackup-backup
           persistentVolumeClaim:
-            claimName: automysqlbackup-data-pvc
+            claimName: automysqlbackup-backup-pvc
         - name: app-uploads
           persistentVolumeClaim:
             claimName: app-uploads-pvc
