@@ -1,0 +1,5 @@
+{% for b in borgbackup_servers %}
+Host {{ b.fqdn }}
+  StrictHostKeyChecking no
+  IdentityFile {{ borgbackup_ssh_key }}
+{% endfor %}

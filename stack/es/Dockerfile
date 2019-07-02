@@ -1,6 +1,6 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:7.1.1
 
-MAINTAINER Helmut Hoffer von Ankershoffen <helmuthva@googlemail.ccom>
+MAINTAINER Helmut Hoffer von Ankershoffen <helmuthva@googlemail.com>
 
 ENV TZ="Europe/Berlin" \
     cluster.name=app \

@@ -189,7 +189,7 @@ staging-dashboard-open: ## Open Dashboard
 
 
 
-production-build-and-push: production-nginx-build-and-push production-varnish-build-and-push production-app-build-and-push production-phpmyadmin-build-and-push production-automysqlbackup-build-and-push production-rabbitmq-build-and-push production-redis-build-and-push production-memcached-build-and-push production-es-build-and-push production-db-build-and-push ## Build all docker images and push to private registry
+production-build-and-push: production-nginx-build-and-push production-varnish-build-and-push production-app-build-and-push production-phpmyadmin-build-and-push production-automysqlbackup-build-and-push production-rabbitmq-build-and-push production-redis-build-and-push production-memcached-build-and-push production-es-build-and-push production-db-build-and-push production-borg-build-and-push ## Build all docker images and push to private registry
 
 production-varnish-build-and-push: ## Build varnish docker image, tag and push to private registry
 	docker build -t varnish stack/varnish
@@ -240,6 +240,11 @@ production-db-build-and-push: ## Build MariaDB docker image, tag and push to pri
 	docker build -t db stack/db
 	docker tag db max-one.local:5001/courses/db:latest
 	docker push max-one.local:5001/courses/db
+
+production-borg-build-and-push: ## Build borg docker image, tag and push to private registry
+	docker build -t borg stack/borg
+	docker tag borg max-one.local:5001/courses/borg:latest
+	docker push max-one.local:5001/courses/borg
 
 production-build-and-deploy: build-and-push production-deploy ## Build all docker images and deploy to production
 

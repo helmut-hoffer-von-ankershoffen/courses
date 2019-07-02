@@ -58,7 +58,7 @@ pip_packages:
 pear_packages: []
 
 cargo_packages:
-  - name: quick
+  - name: click
 
 download_executables:
   - url: https://files.magerun.net/n98-magerun2.phar

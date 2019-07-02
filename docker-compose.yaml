@@ -100,6 +100,7 @@ services:
       - DBNAMES=app
       - DBEXCLUDE="performance_schema information_schema"
       - CRON_SCHEDULE="0 23 * * *"
+      - LATEST="yes"
     links:
       - db:db
     depends_on:
@@ -152,6 +153,47 @@ services:
       - MYSQL_DATABASE=app
     volumes:
       - db-data:/var/lib/mysql
+
+  borg:
+    build:
+      context: ./stack/borg
+    restart: always
+    environment:
+      BORGBACKUP_CLIENT_HOSTNAME: 'courses.development'
+      BORGBACKUP_PASSPHRASE: 'Dhl9EiNohr5koosh1Wohs3Shoo3ooZ6p'
+      BORGBACKUP_RSA_PRIVATE: |-
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEpQIBAAKCAQEAzHdSfeOU3YPAxJE25KDM/8PyK2tDNZSHSWslSIm9daYUXHZV
+        EaLaJAtrvExfMWUe6JquBLhm/GXkx1Xr4q80JuuvCPKW215L7mgblpWgRQdr17H1
+        dUVcrhhZMKgA4MGiKfnZ2Gneq/bSdjtKnD1L3nebO3oIxzcnfsrPjwr7cuhYNz9K
+        urAwQdArNDX0U6y7uCWiOnWy5g6pnoORzGFUcCb5IQXA5vpZ1wAVJtNwd2OsYynn
+        9h9AXdDRh6NuDnHgJHWaSiyxEJB4cEYlfrHCsMvKbrnjCELUI97f8MCNNBKzZLiw
+        7EpJ/ZdT2dRJk1b39PgUVrFMVFimtjiJZIWDJwIDAQABAoIBAQDCyQHbUE3nYbbp
+        DHZBBDeHiUJRvtO+XYsslFhmbGIDjH5lP433SS+Lmx29uvwM8IqriYAymwHxfZif
+        leksgUCru2d6nLC+t2ya6K8vm8edO16vk6eFWtjaOfPt+H8tnwo/9vhjxSgOpwsE
+        +6MuiO6YN1W5KZ7nOlHz5n4phYragW5qIR89xQvSpQrCxCpP4oRF+nZ8DnvAKlac
+        scgcdkJsbwbsIPAw2qfk5+xGhr3GlpMn3pOFw7shCKRZMfR0i8PN3mjX77pIK5eq
+        7tp7LT+0C2qslHrx4NwefIx5bZmLFIkTK7p442/Qql1yLqpXhYQEb6e/l40wm5Wd
+        du/OyfNxAoGBAObaCc9DNu4RNuln/8Vf98aVxO9DdMgi8jObdj6b0jUUBR7wtY+E
+        chFFZ0u/Tjy1JJgu75vA9+1Q4bT59M7ZtdqmtE84jHQVayGyKBIoRxukSDqKMwIT
+        Gr3qaetusVFSlqFQaL1KvXS1e70NJKNtko6OWbP1QLd4otaeTwYTvKd9AoGBAOK9
+        chAqZPz6P9TNs0vkU8VY1dXdX19+8mm7NnCUcQwLZArfDbFETzhfzZxMhQMn/ZTQ
+        KhRLTGd1deiHdOHqkzJ3FC6+Ct7YmNRTTT+FyOQSqOnDg7UAKaUbcqnGiOL/z3RM
+        wyoKNyyienIVPKYlki0mmwvX1efXDqhsKdmg7j5zAoGAHWxS7cDSYnt9NTiVJ/H4
+        Ya47IIfHfa6+kgdRhd9UZoF7uZrSeU1XQI5JASWL8j7gQClTTtXEg9HYQrnNEwQ6
+        oni26JX7iNwmAHB1nQLXNVW2AwgUQkJvGR+kimZcYVIWcs8N2nqJNTPgZpMjRVU0
+        5ciM9Fvg+MF+d75LsimX1P0CgYEAmKLbpFJFxZ9ZVRJcftxoIFPbL6tkxs6YteCX
+        l1X2fBs277KUbx8DDXpA2dURPbywEnvHt/2wo30JMM3vOx5ElRZgec7pVncM+vJQ
+        8FBJmm+NUkCR60j+v+0oVW4XPGjk6O+7+hMCbYO7Vg1B1L86FjcE7QYRM48siOi3
+        i4+wkk0CgYEAjs+FlOFHN/U7cqLq36vFM29ORfamjS7A0wTjpmze01zC/U45yZsB
+        gt+ucLUjlQ2Ems0b4WLwfM/r7cUOhDm7GqKeo2prh58gGgBQirbVdmypzeHmifzP
+        YV8zGExKV0NjfS4MCVJ6aRiDsKGmpjGtfwfw9FMwvJ500B+ySkzGx+4=
+        -----END RSA PRIVATE KEY-----
+      BORGBACKUP_RSA_PUBLIC: |-
+        ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMd1J945Tdg8DEkTbkoMz/w/Ira0M1lIdJayVIib11phRcdlURotokC2u8TF8xZR7omq4EuGb8ZeTHVevirzQm668I8pbbXkvuaBuWlaBFB2vXsfV1RVyuGFkwqADgwaIp+dnYad6r9tJ2O0qcPUved5s7egjHNyd+ys+PCvty6Fg3P0q6sDBB0Cs0NfRTrLu4JaI6dbLmDqmeg5HMYVRwJvkhBcDm+lnXABUm03B3Y6xjKef2H0Bd0NGHo24OceAkdZpKLLEQkHhwRiV+scKwy8puueMIQtQj3t/wwI00ErNkuLDsSkn9l1PZ1EmTVvf0+BRWsUxUWKa2OIlkhYMn root@courses
+    volumes:
+      - automysqlbackup-data:/var/borg/automysqlbackup-data
+      - courses-app:/var/borg/app-app
 
   app_infra_up:
     image: dadarek/wait-for-dependencies

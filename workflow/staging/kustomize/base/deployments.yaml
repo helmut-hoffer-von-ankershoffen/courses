@@ -534,7 +534,82 @@ spec:
               value: "performance_schema information_schema"
             - name: CRON_SCHEDULE
               value: "0 0 * * *"
+            - name: LATEST
+              value: "yes"
+          volumeMounts:
+            - name: data
+              mountPath: /backup
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: automysqlbackup-data-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: courses
+  name: borg
+  labels:
+    app: borg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: borg
+  template:
+    metadata:
+      labels:
+        app: borg
+    spec:
+      containers:
+        - name: borg
+          image: max-one.local:5001/courses/borg
+          env:
+            - name: BORGBACKUP_CLIENT_HOSTNAME
+              value: "courses.staging"
+            - name: BORGBACKUP_PASSPHRASE
+              value: "Shl9EiNohr5koosh1Wohs3Shoo3ooZ6p"
+            - name: BORGBACKUP_RSA_PRIVATE
+              value: |-
+                -----BEGIN RSA PRIVATE KEY-----
+                MIIEowIBAAKCAQEA7NaOSUE9njTls1/2OhopdlTPvEH+ue4QcanuF+wR/tKdxcX7
+                0U95YXXYWXC3dwP37r9jwPFCAG3j7Y8cQW1+HHqDyBj3Kxs5VVLLx6m4kt2Km31r
+                J/T8KZW79s9zFrW3jHihXxsf+Aw/sGGsJQmPJFxPQFxp5e7XVLGF21fZwOJiSJmK
+                Ldn2Ih7Lsi8ijjBG+n92wfQhlxlsc7bE1T/Y7u11rxHCcwU5I29zwxpTsSv6r+O/
+                pncfIM7jQeMqlsYNUjDFhmqOgbGTWAA4x58UowRxoAmKSlQOLD1jQ2FwPqWTMDOw
+                vZaGuv68bHcVx/o7Q8XpIG22YqL3sLH57yOxlQIDAQABAoIBAClXip7e9JKZST92
+                kNSznGk7hMen/X8XP2eX8ifa3YlN2pybYsm2xclteMakFmKAHtdeMVuMwaixhggB
+                4zzIkCsId9iGAx9TMT7jpQ7FYaLBaWCbFAl1ik74BEehDsX4EoJCzGh9o6b4/GUd
+                p58PfB0sv+jMOPAaMRxnoKYZP7mbdPV/9H81PpTGNmIhgMVatZDGEbXpwML+qtgk
+                eKDcENomO7CHSvhgLfk85tmGUiCSSZf9LydTnGeboFDEE1J8uLJOvH7UrOfbXOkD
+                tT10h3wCdOXv2T1Sq0oLRfZyI0PApdXCbO5XWju0l4GTaMTU0hQL/JKcv7Hu6khC
+                DlK7MkECgYEA9rX0Bv57KT6OZErdL0VL+9Wp/k/j1KZeiKvbWr3162SQgkQuAFK7
+                0y85rnwgLrgRsWm83YI+KZ3p5IgCUH0rJ4oKmETG2xBBq6zuZOPq7+ICHlYI0GeA
+                4j7xB4U/WMLdYElEDG1dAXwKc1zoxi0I3XojdXawL1Kqfa3o4Tyi2m8CgYEA9cFw
+                qBUD6DvkpvLHrmMhRjt8+oEz9JOm40Uv5SNbbwM5BBgdgPhLZ4iN2NNklIclhB75
+                QJBKD8FfRKAARKZQiFrHrjS5R2Rc0nIgi+WiIYT+XdeuZRfoGnTZbT+QJr9dSaxj
+                8f3HeKVhapQlLFUtuIgn/NMQiqwbpj9gZqSvRjsCgYBoqrEo9nYR/XQzoH9OOrwN
+                z4wbVJF3+k1I9oBNcyIOB9A3M+3APVlqMzLpj8eningXKKDz6PmudkxwpDM3KqNQ
+                VwQ/rY4gCjmSN/+71eYqd1wmuqFqqT7IvaNMaX+CjMmWu/6etxcqNhHI97XZvelw
+                7Qx2HTCKIywpvcp7JFqDCQKBgCdQTqlU008vZaCfbfojuYr2sUORr7IMfMIWq1bI
+                lTPpHBHfmbir/8QMQETTbF+mTwYXvl/ptS9YC9l6jxBsWq21eAQSQyF8mKzBvRsk
+                HQ+nqtlwS2G4tVSmJLIpXPIV4uKKRWLM6kAOlMrr8BZreejvPxZe3WKRrcqmkNFa
+                vv9JAoGBALQ3feeDbx6Xr3Pjguf+djCtWwLTlPkpYdXSCshgOoSFIkYPYAXg0ufP
+                emdhlrs1Lr7ZrP+qLdxs6lVm1E081LS9Spad4SuJPNE9y2rOnXSyjdO33ZF7fCOI
+                vkCnAdGrqEMpVfjjWrQUOJvX4r5kNAFtM0vIsqd++ZXEsdN4RvfH
+                -----END RSA PRIVATE KEY-----
+            - name: BORGBACKUP_RSA_PUBLIC
+              value: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDs1o5JQT2eNOWzX/Y6Gil2VM+8Qf657hBxqe4X7BH+0p3FxfvRT3lhddhZcLd3A/fuv2PA8UIAbePtjxxBbX4ceoPIGPcrGzlVUsvHqbiS3YqbfWsn9Pwplbv2z3MWtbeMeKFfGx/4DD+wYawlCY8kXE9AXGnl7tdUsYXbV9nA4mJImYot2fYiHsuyLyKOMEb6f3bB9CGXGWxztsTVP9ju7XWvEcJzBTkjb3PDGlOxK/qv47+mdx8gzuNB4yqWxg1SMMWGao6BsZNYADjHnxSjBHGgCYpKVA4sPWNDYXA+pZMwM7C9loa6/rxsdxXH+jtDxekgbbZiovewsfnvI7GV root@courses"
+          volumeMounts:
+            - name: automysqlbackup-data
+              mountPath: /var/borg/automysqlbackup/data
+            - name: app-uploads
+              mountPath: /var/borg/app/uploads
+      volumes:
+        - name: automysqlbackup-data
+          persistentVolumeClaim:
+            claimName: automysqlbackup-data-pvc
+        - name: app-uploads
+          persistentVolumeClaim:
+            claimName: app-uploads-pvc

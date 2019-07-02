@@ -1,6 +1,6 @@
 FROM webdevops/php-apache-dev:7.2
 
-MAINTAINER Helmut Hoffer von Ankershoffen <helmuthva@googlemail.ccom>
+MAINTAINER Helmut Hoffer von Ankershoffen <helmuthva@googlemail.com>
 
 USER root
 

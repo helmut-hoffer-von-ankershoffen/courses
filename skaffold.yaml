@@ -31,6 +31,8 @@ build:
     context: stack/phpmyadmin
   - image: max-one.local:5001/courses/automysqlbackup
     context: stack/automysqlbackup
+  - image: max-one.local:5001/courses/borg
+    context: stack/borg
 deploy:
   kustomize:
     path: workflow/staging/kustomize/overlays/max

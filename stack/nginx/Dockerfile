@@ -1,6 +1,6 @@
 FROM webdevops/nginx:debian-9
 
-MAINTAINER Helmut Hoffer von Ankershoffen <helmuthva@googlemail.ccom>
+MAINTAINER Helmut Hoffer von Ankershoffen <helmuthva@googlemail.com>
 
 USER root
 

@@ -1,0 +1,42 @@
+borgbackup_required: true
+
+borgbackup_client_user: root
+borgbackup_ssh_key: "~root/.ssh/id_borg_rsa"
+
+borgbackup_version: "1.1.4"
+borgbackup_checksum: "sha256:4ecf507f21f0db7c437b2ef34566273d7ba5a7d05e921c6f0e3406c3f96933a7"
+borgbackup_download_url: "https://github.com/borgbackup/borg/releases/download/{{ borgbackup_version }}/borg-linux64"
+
+borgbackup_compression: "auto,zlib,6"
+borgbackup_encryption_mode: "repokey-blake2"
+
+borgbackup_pre_commands: []
+
+borgbackup_post_commands: []
+
+borgbackup_include:
+  - "/var/borg/"
+
+borgbackup_exclude: []
+
+borgbackup_servers:
+  - fqdn: router.maxxx.pro
+    user: borgbackup
+    type: normal
+    home: /var/borgbackup/
+    pool: repos
+    options: ""
+
+borgbackup_retention:
+  hourly: 12
+  daily: 7
+  weekly: 4
+  monthly: 6
+  yearly: 1
+
+borgbackup_cron_day: "*"
+borgbackup_cron_hour: "0"
+borgbackup_cron_minute: "1"
+
+borgbackup_appendonly: false
+borgbackup_appendonly_repoconfig: false

@@ -8,5 +8,11 @@ Dockerfile
 /vendor/*
 !/vendor/.gitkeep
 
+pub/app/cache/*
+!pub/app/cache/.gitkeep
+
+pub/app/w3tc-config/*
+!pub/app/w3tc-config/.gitkeep
+
 /pub/app/uploads/*
 !/pub/app/uploads/.gitkeep

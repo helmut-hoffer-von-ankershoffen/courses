@@ -4,9 +4,11 @@ echo "Provisioning app ..."
 
 # Create necessary directories if missing and fix permissions
 echo "Creating necessary directories ..."
-mkdir -p /app/web/app/uploads
+mkdir -p /app/pub/app/uploads
+mkdir -p /app/pub/app/cache
 echo "Setting permisssions ..."
-chmod -R 777 /app/web/app/uploads
+chmod -R 777 /app/pub/app/uploads
+chmod -R 777 /app/pub/app/cache
 
 # Execute as user application
 su application << 'EOSU'
@@ -55,7 +57,8 @@ EOSU
 
 ## Fix permissions again
 echo "Fixing permisssions again ..."
-chmod -R 777 /app/web/app/uploads
+chmod -R 777 /app/pub/app/uploads
+chmod -R 777 /app/pub/app/cache
 
 echo "Provisioning app done."
 
