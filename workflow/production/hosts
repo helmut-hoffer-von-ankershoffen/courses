@@ -1,8 +1,9 @@
 [all]
-max-one.localhost ansible_ssh_user="root"
+h1.hauptstadtkoffer.de ansible_ssh_user="root"
+h2.hauptstadtkoffer.de ansible_ssh_user="root"
 
 [front]
-max-one.localhost ansible_ssh_user="root"
+h2.hauptstadtkoffer.de ansible_ssh_user="root"
 
 [back]
-max-one.localhost ansible_ssh_user="root"
+h1.hauptstadtkoffer.de ansible_ssh_user="root"

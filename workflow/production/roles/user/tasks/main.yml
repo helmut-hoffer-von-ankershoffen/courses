@@ -22,13 +22,13 @@
     append: yes
     comment: 'managed by ansible'
 
-- name: Upload authorized keys
+- name: "Upload authorized keys for {{ app.user.name }}"
   authorized_key:
-    user: '{{ item.username }}'
+    user: '{{ app.user.name }}'
     key: "{{ lookup('file', 'files/{{ item.username }}.pub') }}"
-  with_items: '{{users}}'
+  with_items: '{{ users }}'
 
-- name: Setup users and assign to wheel and docker group
+- name: "Setup users for project members and assign to wheel and docker group"
   user:
     name: '{{ item.username }}'
     shell: '/bin/bash'
@@ -39,5 +39,10 @@
     comment: 'managed by ansible'
   with_items: '{{ users }}'
 
+- name: "Upload authorized keys for project members"
+  authorized_key:
+    user: '{{ item.username }}'
+    key: "{{ lookup('file', 'files/{{ item.username }}.pub') }}"
+  with_items: '{{ users }}'
 
 

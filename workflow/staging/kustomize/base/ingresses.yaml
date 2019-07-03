@@ -11,7 +11,7 @@ metadata:
     traefik.ingress.kubernetes.io/redirect-permanent: "false"
 spec:
   rules:
-  - host: courses.maxxx.pro
+  - host: courses.staging.maxxx.pro
     http:
       paths:
         - path: /

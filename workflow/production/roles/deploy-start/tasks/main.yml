@@ -1,7 +1,7 @@
 ---
 
 - uptimerobot:
-    monitorid: "{{ item}}"
+    monitorid: "{{ item }}"
     apikey: "{{ uptimerobot_api_key}}"
     state: paused
   with_items: "{{ uptimerobot_deploy_monitor_ids }}"

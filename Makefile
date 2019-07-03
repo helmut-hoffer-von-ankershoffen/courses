@@ -214,7 +214,7 @@ staging-undeploy: ## Delete deployment on staging
 	kubectl delete namespace courses || true
 
 staging-open: ## Open services on staging
-	python -mwebbrowser http://courses.maxxx.pro
+	python -mwebbrowser http://courses.staging.maxxx.pro
 
 staging-proxy: ## Open K8S proxy to staging
 	kubectl proxy
@@ -226,89 +226,97 @@ staging-dashboard-open: ## Open Dashboard
 	python -mwebbrowser http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/overview?namespace=default
 
 
+production-h1-ssh: ## SSH into h1
+	ssh courses@h1.hauptstadtkoffer.de
+
+production-h2-ssh: ## SSH into h2
+	ssh courses@h2.hauptstadtkoffer.de
+
+production-h1-ssh-root: ## SSH into h1 as root
+	ssh root@h1.hauptstadtkoffer.de
+
+production-h2-ssh-root: ## SSH into h2 as root
+	ssh root@h2.hauptstadtkoffer.de
 
 production-build-and-push: production-nginx-build-and-push production-varnish-build-and-push production-app-build-and-push production-phpmyadmin-build-and-push production-automysqlbackup-build-and-push production-rabbitmq-build-and-push production-redis-build-and-push production-memcached-build-and-push production-es-build-and-push production-db-build-and-push production-borg-build-and-push ## Build all docker images and push to private registry
 
 production-varnish-build-and-push: ## Build varnish docker image, tag and push to private registry
 	docker build -t varnish stack/varnish
-	docker tag varnish max-one.local:5001/courses/varnish:latest
-	docker push max-one.local:5001/courses/varnish
+	docker tag varnish h2.vlan:5001/courses/varnish:latest
+	docker push h2.vlan:5001/courses/varnish
 
 production-nginx-build-and-push: ## Build nginx docker image, tag and push to private registry
 	docker build -t nginx stack/nginx
-	docker tag nginx max-one.local:5001/courses/nginx:latest
-	docker push max-one.local:5001/courses/nginx
+	docker tag nginx h2.vlan:5001/courses/nginx:latest
+	docker push h2.vlan:5001/courses/nginx
 
 production-app-build-and-push: ## Build app docker image, tag and push to private registry
 	docker build -t app app
-	docker tag app max-one.local:5001/courses/app:latest
-	docker push max-one.local:5001/courses/app
+	docker tag app h2.vlan:5001/courses/app:latest
+	docker push h2.vlan:5001/courses/app
 
 production-phpmyadmin-build-and-push: ## Build phpMyAdmin docker image, tag and push to private registry
 	docker build -t phpmyadmin stack/phpmyadmin
-	docker tag phpmyadmin max-one.local:5001/courses/phpmyadmin:latest
-	docker push max-one.local:5001/courses/phpmyadmin
+	docker tag phpmyadmin h2.vlan:5001/courses/phpmyadmin:latest
+	docker push h2.vlan:5001/courses/phpmyadmin
 
 production-automysqlbackup-build-and-push: ## Build automysqlbackup docker image, tag and push to private registry
 	docker build -t automysqlbackup stack/automysqlbackup
-	docker tag automysqlbackup max-one.local:5001/courses/automysqlbackup:latest
-	docker push max-one.local:5001/courses/automysqlbackup
+	docker tag automysqlbackup h2.vlan:5001/courses/automysqlbackup:latest
+	docker push h2.vlan:5001/courses/automysqlbackup
 
 production-rabbitmq-build-and-push: ## Build RabbitMQ docker image, tag and push to private registry
 	docker build -t rabbitmq stack/rabbitmq
-	docker tag rabbitmq max-one.local:5001/courses/rabbitmq:latest
-	docker push max-one.local:5001/courses/rabbitmq
+	docker tag rabbitmq h2.vlan:5001/courses/rabbitmq:latest
+	docker push h2.vlan:5001/courses/rabbitmq
 
 production-redis-build-and-push: ## Build Redis docker image, tag and push to private registry
 	docker build -t redis stack/redis
-	docker tag redis max-one.local:5001/courses/redis:latest
-	docker push max-one.local:5001/courses/redis
+	docker tag redis h2.vlan:5001/courses/redis:latest
+	docker push h2.vlan:5001/courses/redis
 
 production-memcached-build-and-push: ## Build Memcached docker image, tag and push to private registry
 	docker build -t memcached stack/memcached
-	docker tag memcached max-one.local:5001/courses/memcached:latest
-	docker push max-one.local:5001/courses/memcached
+	docker tag memcached h2.vlan:5001/courses/memcached:latest
+	docker push h2.vlan:5001/courses/memcached
 
 production-es-build-and-push: ## Build Elasticsearch docker image, tag and push to private registry
 	docker build -t es stack/es
-	docker tag es max-one.local:5001/courses/es:latest
-	docker push max-one.local:5001/courses/es
+	docker tag es h2.vlan:5001/courses/es:latest
+	docker push h2.vlan:5001/courses/es
 
 production-db-build-and-push: ## Build MariaDB docker image, tag and push to private registry
 	docker build -t db stack/db
-	docker tag db max-one.local:5001/courses/db:latest
-	docker push max-one.local:5001/courses/db
+	docker tag db h2.vlan:5001/courses/db:latest
+	docker push h2.vlan:5001/courses/db
 
 production-borg-build-and-push: ## Build borg docker image, tag and push to private registry
 	docker build -t borg stack/borg
-	docker tag borg max-one.local:5001/courses/borg:latest
-	docker push max-one.local:5001/courses/borg
+	docker tag borg h2.vlan:5001/courses/borg:latest
+	docker push h2.vlan:5001/courses/borg
 
 production-build-and-deploy: build-and-push production-deploy ## Build all docker images and deploy to production
 
 production-deploy: ## Deploy to production without building first
 	cd workflow/production && ansible-playbook main.yml --tags "deploy"
 
-production-max-one-ssh: ## SSH into max-one
-	ssh courses@max-one.local
-
 production-open: production-logging-open ## Open services on production in your browser
-	python -mwebbrowser https://courses.20steps.de
-	python -mwebbrowser https://courses.20steps.de/wp-admin
-	python -mwebbrowser http://max-one.local:8081
-	python -mwebbrowser http://max-one.local:15672
-	python -mwebbrowser http://max-one.local:9000
+	python -mwebbrowser https://courses.maxxx.pro
+	python -mwebbrowser https://courses.maxxx.pro/wp-admin
+	python -mwebbrowser http://h2.vlan:5001:8081
+	python -mwebbrowser http://h2.vlan:5001:15672
+	python -mwebbrowser http://h2.vlan:5001:9000
 
 production-nginx-cert-renewal: ## Renew certs of nginx on production
 	cd workflow/production && ansible-playbook main.yml --tags "cert"
 
 production-logging-open: ## Open logging dashboard (graylog)
-	python -mwebbrowser http://max-one.local:9000
+	python -mwebbrowser http://h2.vlan:5001:9000
 
 production-monitoring-open: ## Open monitoring dashboards (UptimeRobot.com, Sentry.io and Grafana)
 	python -mwebbrowser https://stats.uptimerobot.com/OZAWPTWNA
 	python -mwebbrowser https://sentry.io/organizations/courses/issues/?project=1484857
-	python -mwebbrowser http://max-one.local:3000
+	python -mwebbrowser http://h2.vlan:5001:3000
 
 production-user-setup: ## Setup users on production e.g. to add new or updated SSH keys
 	cd workflow/production && ansible-playbook main.yml --tags "user"

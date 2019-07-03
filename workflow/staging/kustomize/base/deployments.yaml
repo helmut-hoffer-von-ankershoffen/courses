@@ -34,7 +34,7 @@ spec:
         - name: APP_UPSTREAM_HOST
           value: 'varnish.courses.svc.cluster.local'
         - name: APP_DOMAIN
-          value: 'courses.maxxx.pro'
+          value: 'courses.staging.maxxx.pro'
         - name: APP_CDN_DOMAIN
           value: 'courses-2daa.kxcdn.com'
         ports:
@@ -169,7 +169,7 @@ spec:
         image: max-one.local:5001/courses/app
         env:
         - name: WEB_ALIAS_DOMAIN
-          value: "courses.maxxx.pro"
+          value: "courses.staging.maxxx.pro"
         - name: APP_STAGE
           value: "development"
         - name: APP_MODE
@@ -201,9 +201,9 @@ spec:
         - name: APP_WP_ENV
           value: "development"
         - name: APP_WP_HOME
-          value: "https://courses.maxxx.pro"
+          value: "https://courses.staging.maxxx.pro"
         - name: APP_WP_SITEURL
-          value: "https://courses.maxxx.pro/wp"
+          value: "https://courses.staging.maxxx.pro/wp"
         - name: APP_WP_DISABLE_WP_CRON
           value: "false"
         - name: APP_WP_AUTH_KEY

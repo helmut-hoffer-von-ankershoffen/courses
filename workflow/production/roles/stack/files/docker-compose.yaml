@@ -2,12 +2,12 @@ version: '3'
 services:
 
   nginx:
-    image: max-one.localhost:5001/courses/nginx:latest
+    image: h2.vlan:5001/courses/nginx:latest
     restart: always
     environment:
-      - APP_DOMAIN=courses.20steps.de max-one.localhost
-      - APP_CERTBOT_NAME="courses.20steps.de"
-      - APP_CERTBOT_DOMAINS="-d courses.20steps.de"
+      - APP_DOMAIN=courses.maxxx.pro
+      - APP_CERTBOT_NAME="courses.maxxx.pro"
+      - APP_CERTBOT_DOMAINS="-d courses.maxxx.pro"
       - APP_CERTBOT_EMAIL="helmuthva@googlemail.com"
     ports:
       - "80:80"
@@ -26,7 +26,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   varnish:
-    image: max-one.localhost:5001/courses/varnish:latest
+    image: h2.vlan:5001/courses/varnish:latest
     restart: always
     links:
       - app:app
@@ -38,11 +38,11 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   app:
-    image: max-one.localhost:5001/courses/app:latest
+    image: h2.vlan:5001/courses/app:latest
     restart: always
     user: application
     environment:
-      - WEB_ALIAS_DOMAIN=courses.20steps.de
+      - WEB_ALIAS_DOMAIN=courses.maxxx.pro
       - APP_STAGE=production
       - APP_MODE=prod
       - APP_UNATTENDED_UPGRADE=true
@@ -54,8 +54,8 @@ services:
       - APP_WP_DB_USER=root
       - APP_WP_DB_PASSWORD=secret
       - APP_WP_ENV=development
-      - APP_WP_HOME=https://courses.com
-      - APP_WP_SITEURL=https://courses.com/wp
+      - APP_WP_HOME=https://courses.maxxx.pro
+      - APP_WP_SITEURL=https://courses.maxxx.pro/wp
       - APP_WP_DISABLE_WP_CRON=false
       - 'APP_WP_AUTH_KEY="_hze=m:Vjonnmhrxy/}C*!$$m./GYi$$9QV+pZ}[`)I@l+f.y6AZip*m>TMeci&I('
       - 'APP_WP_SECURE_AUTH_KEY=">h>bcm-Z[oj4!}RV].1XaSo4K9_9#d9X^)Z(SJ/Eeg|6I![qB*Ds_ndlL@61R6{>"'
@@ -92,7 +92,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   rabbitmq:
-    image: max-one.localhost:5001/courses/rabbitmq:latest
+    image: h2.vlan:5001/courses/rabbitmq:latest
     restart: always
     ports:
       - "15672:15672"
@@ -104,7 +104,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   redis:
-    image: max-one.localhost:5001/courses/redis:latest
+    image: h2.vlan:5001/courses/redis:latest
     restart: always
     ports:
       - "6379:6379"
@@ -114,7 +114,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   memcached:
-    image: max-one.localhost:5001/courses/memcached:latest
+    image: h2.vlan:5001/courses/memcached:latest
     restart: always
     logging:
       driver: gelf
@@ -122,7 +122,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   es:
-    image: max-one.localhost:5001/courses/es:latest
+    image: h2.vlan:5001/courses/es:latest
     restart: always
     environment:
       - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
@@ -140,7 +140,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   db:
-    image: max-one.localhost:5001/courses/db:latest
+    image: h2.vlan:5001/courses/db:latest
     restart: always
     ports:
       - "3306:3306"
@@ -155,7 +155,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   phpmyadmin:
-    image: max-one.localhost:5001/courses/phpmyadmin:latest
+    image: h2.vlan:5001/courses/phpmyadmin:latest
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=secret
@@ -173,7 +173,7 @@ services:
         gelf-address: "udp://192.168.100.2:12201"
 
   automysqlbackup:
-    image: max-one.localhost:5001/courses/automysqlbackup:latest
+    image: h2.vlan:5001/courses/automysqlbackup:latest
     restart: always
     environment:
       - USERNAME=root
@@ -191,7 +191,7 @@ services:
       - '/mnt/gluster/courses/volumes/automysqlbackup/backup:/backup'
 
   borg:
-    image: max-one.localhost:5001/courses/borg:latest
+    image: h2.vlan:5001/courses/borg:latest
     restart: always
     environment:
       BORGBACKUP_CLIENT_HOSTNAME: 'courses.production'
@@ -230,6 +230,27 @@ services:
     volumes:
       - '/mnt/gluster/courses/volumes/automysqlbackup/backup:/var/borg/automysqlbackup/backup'
       - '/mnt/gluster/courses/volumes/app/uploads:/var/borg/app/uploads'
+
+  app_infra_up:
+    image: dadarek/wait-for-dependencies
+    environment:
+      SLEEP_LENGTH: 1
+      TIMEOUT_LENGTH: 300
+    depends_on:
+      - rabbitmq
+      - redis
+      - es
+      - db
+    command: rabbitmq:5672 redis:6379 es:9200 db:3306
+
+  app_wait_for:
+    image: dadarek/wait-for-dependencies
+    environment:
+      SLEEP_LENGTH: 1
+      TIMEOUT_LENGTH: 300
+    depends_on:
+      - app
+    command: app:80
 
 volumes:
   rabbitmq-data:

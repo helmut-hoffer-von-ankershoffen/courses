@@ -9,15 +9,15 @@
 
 - name: Stack pull!
   become: yes
-  become_user: shop
+  become_user: '{{ app.user.name }}'
   shell: cd ~/ && make stack-pull
 
 - name: Stack down!
   become: yes
-  become_user: shop
+  become_user: '{{ app.user.name }}'
   shell: cd ~/ && make stack-down
 
 - name: Stack up!
   become: yes
-  become_user: shop
+  become_user: '{{ app.user.name }}'
   shell: cd ~/ && make stack-up
