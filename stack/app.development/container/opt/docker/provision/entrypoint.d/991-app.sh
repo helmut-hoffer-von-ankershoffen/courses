@@ -48,8 +48,10 @@ $CMD_APP plugin activate wordpress-seo
 echo "Activating theme ..."
 $CMD_APP theme activate hestia
 
-## Dump autoloader
-echo "Dumping optimized autoloader"
+echo "Injecting stage specific settings ..."
+cp -f /app/pub/app/w3tc-config/master.$APP_STAGE.php /app/pub/app/w3tc-config/master.php
+
+echo "Dumping optimized autoloader ..."
 cd /app && composer dump-autoload -o --apcu
 
 ## Switch back to root

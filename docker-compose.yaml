@@ -63,7 +63,7 @@ services:
       - /tmp
     volumes:
       - courses-app:/app:nocopy
-      - courses-app-uploads:/app/pub/aapp/uploads:nocopy
+      - courses-app-uploads:/app/pub/app/uploads:nocopy
       - automysqlbackup-backup:/backup/db
     links:
       - rabbitmq:rabbitmq
