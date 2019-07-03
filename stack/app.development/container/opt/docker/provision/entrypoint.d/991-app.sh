@@ -44,6 +44,7 @@ $CMD_APP plugin activate regenerate-thumbnails
 $CMD_APP plugin activate simple-image-sizes
 $CMD_APP plugin activate w3-total-cache
 $CMD_APP plugin activate wordpress-seo
+$CMD_APP plugin activate wp-smushit
 
 if [ "$APP_STAGE" = "production" ]
 then
