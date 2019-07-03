@@ -4,13 +4,13 @@
 
 sub wp_recv {
     # pass if dynamic stuff of wp called
-    if (req.url ~ "(wp-login|wp-admin)" || req.url ~ "preview=true" || req.url ~ "xmlrpc.php") {
+    if (req.url ~ "(wp-login|wp-admin|shop|product|cart|checkout|account)" || req.url ~ "preview=true" || req.url ~ "xmlrpc.php") {
         return (pass);
     }
 
     # pass if wp cookie set
     if (req.http.cookie) {
-        if (req.http.cookie ~ "(wp-postpass|wordpress_|wordpress_logged_in|comment_author_|wp-settings-)") {
+        if (req.http.cookie ~ "(wp|wordpress|woocommerce|comment_author_)") {
             return(pass);
         }
     }
@@ -29,11 +29,20 @@ sub wp_recv {
 sub wp_backend_response {
 
     # no caching given URL
-    if (bereq.url ~ "(wp-login|wp-admin)" || bereq.url ~ "preview=true" || bereq.url ~ "xmlrpc.php") {
+    if (bereq.url ~ "(wp-login|wp-admin|shop|product|cart|checkout|account)" || bereq.url ~ "preview=true" || bereq.url ~ "xmlrpc.php") {
 		set beresp.uncacheable = true;
 		set beresp.ttl = 0s;
         set beresp.grace = 0s;
         return (deliver);
     }
 
+    # no caching given cookie
+    if (bereq.http.cookie) {
+        if (bereq.http.cookie ~ "(wp|wordpress|woocommerce|comment_author_)") {
+            set beresp.uncacheable = true;
+            set beresp.ttl = 0s;
+            set beresp.grace = 0s;
+            return(deliver);
+        }
+    }
 }
