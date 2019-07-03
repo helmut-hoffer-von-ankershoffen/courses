@@ -8,7 +8,7 @@
  */
 
 sub fos_refresh_recv {
-    if (req.http.Cache-Control ~ "no-cache" && client.ip ~ invalidators) {
+    /*  if (req.http.Cache-Control ~ "no-cache" && client.ip ~ invalidators) {
         set req.hash_always_miss = true;
-    }
+    } */
 }

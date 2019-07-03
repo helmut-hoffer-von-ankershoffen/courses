@@ -320,7 +320,7 @@
 "minify.cache.files_regexp": false,
 "cdn.configuration_overloaded": false,
 "cdn.enabled": "1",
-"cdn.debug": false,
+"cdn.debug": "0",
 "cdn.flush_manually": "0",
 "cdn.engine": "mirror",
 "cdn.uploads.enable": "1",
@@ -490,10 +490,10 @@
 "cdnfsd.stackpath2.domain": [],
 "cdnfsd.stackpath2.ssl": "auto",
 "varnish.configuration_overloaded": false,
-"varnish.enabled": "0",
-"varnish.debug": false,
+"varnish.enabled": "1",
+"varnish.debug": "0",
 "varnish.servers": [
-""
+"varnish:80"
 ],
 "browsercache.configuration_overloaded": false,
 "browsercache.enabled": "1",

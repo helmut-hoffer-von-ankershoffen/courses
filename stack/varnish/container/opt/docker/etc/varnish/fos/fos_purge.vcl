@@ -12,6 +12,8 @@ sub fos_purge_recv {
         if (!client.ip ~ invalidators) {
             return (synth(405, "Not allowed"));
         }
-        return (purge);
+        // ban all on purge
+        ban("req.http.host ~ .*");
+        return (synth(200, "Banned all"));
     }
 }

@@ -30,7 +30,7 @@ sub assets_backend_response {
     if (bereq.url ~ "^[^?]*\.(7z|avi|bmp|bz2|css|csv|doc|docx|eot|flac|flv|gif|gz|ico|jpeg|jpg|js|less|mka|mkv|mov|mp3|mp4|mpeg|mpg|odt|otf|ogg|ogm|opus|pdf|png|ppt|pptx|rar|rtf|svg|svgz|swf|tar|tbz|tgz|ttf|txt|txz|wav|webm|webp|woff|woff2|xls|xlsx|xml|xz|zip)(\?.*)?$") {
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cache-Control;
-        set beresp.ttl = 7d;
+        set beresp.ttl = 365d;
     }
 
     # Large static files are delivered directly to the end-user without

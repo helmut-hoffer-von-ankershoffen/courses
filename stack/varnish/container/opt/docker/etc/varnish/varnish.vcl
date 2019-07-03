@@ -3,6 +3,7 @@ vcl 4.0;
 import std;
 import directors;
 
+include "/opt/docker/etc/varnish/fos/fos_purge.vcl";
 include "/opt/docker/etc/varnish/fos/fos_ban.vcl";
 include "/opt/docker/etc/varnish/fos/fos_refresh.vcl";
 
@@ -24,9 +25,9 @@ include "/opt/docker/etc/varnish/includes/wp.vcl";
 
 acl invalidators {
      "localhost";
-     # Add any other IP addresses that your application runs on and that you
-     # want to allow invalidation requests from. For instance:
-     # "192.168.1.0"/24;
+     "127.0.0.1";
+     "192.0.0.0"/8;
+     "172.0.0.0"/8;
 }
 
 # Called at the beginning of a request, after the complete request has been received and parsed.
@@ -36,11 +37,14 @@ acl invalidators {
 sub vcl_recv {
 
     call badbot;
+    call fos_purge_recv;
+    call fos_ban_recv;
 
     # Used to switch of caching partly or completely for dev by setting the environment variable as needed
     if (req.http.host ~ "<VARNISH_HOST_NEVER_CACHE_REGEX>") {
         return (pass);
     }
+
     call probe_recv;
     call devices_recv;
     call pagespeed_recv;
@@ -48,7 +52,6 @@ sub vcl_recv {
     call websocket_recv;
     call normalize_recv;
     call fos_refresh_recv;
-    call fos_ban_recv;
     call tracking_prune_recv;
     call cookies_prune_blacklist_recv;
     call assets_recv;
@@ -63,6 +66,7 @@ sub vcl_hash {
 
 # Handle the HTTP request coming from our backend
 sub vcl_backend_response {
+
     # retry if backend is down
     if (beresp.status == 503 && bereq.retries < 3 ) {
         return(retry);
@@ -79,7 +83,7 @@ sub vcl_backend_response {
 sub vcl_deliver {
     call fos_ban_deliver;
     call devices_deliver;
-    # call debug_deliver;
+    call debug_deliver;
     call normalize_deliver;
 }
 

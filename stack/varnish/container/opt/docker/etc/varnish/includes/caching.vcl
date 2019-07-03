@@ -14,6 +14,10 @@ sub caching_rules_recv {
         }
     }
 
+    // Unset what the browser tells us
+    unset req.http.cache-control;
+    unset req.http.pragma;
+
     // move the cookie so the inbuilt rules of varnish will call vcl_hash even if cookies are set
     set req.http.Cookie-Backup = req.http.Cookie;
     unset req.http.Cookie;
@@ -35,38 +39,30 @@ sub caching_hash {
 
 sub caching_rules_backend_response {
 
-    # Don't cache 5xx responses
-    if (beresp.status == 500 || beresp.status == 502 || beresp.status == 503 || beresp.status == 504 || beresp.status == 505 ) {
+    # don't cache >= 400 responses
+    if (beresp.status >= 400 ) {
         unset beresp.http.Cache-Control;
         set beresp.uncacheable = true;
         set beresp.ttl = 0s;
+        set beresp.grace = 0s;
         return (deliver);
     }
 
-    // always cache cache-me
+    // always cache given path
     if (bereq.url == "/cache-me") {
         // so unset cookies and set the ttl for this
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cache-Control;
-        set beresp.ttl = 3h;
-    } else {
-        // cache nothing else if the user is logged in
-        if (bereq.http.Cookie ~ "app_user") {
-            set beresp.uncacheable = true;
-            set beresp.ttl = 0s;
-            return (deliver);
-        } else {
-            unset beresp.http.Cache-Control;
-            set beresp.uncacheable = true;
-            set beresp.ttl = 0s;
-        }
+        set beresp.ttl = 24h;
+        return (deliver);
     }
 
-    // if forced unset cookies and cache
+    // always cache given header
     if (beresp.http.X-Type == "FORCE_CACHE") {
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cache-Control;
-        set beresp.ttl = 3h;
+        set beresp.ttl = 24h;
+        return (deliver);
     }
 
     // Do not cache 301 and 302 redirects
@@ -74,6 +70,11 @@ sub caching_rules_backend_response {
         unset beresp.http.Cache-Control;
         set beresp.uncacheable = true;
         set beresp.ttl = 0s;
+        return (deliver);
     }
+
+    # set the default cache time of 24 hours
+    set beresp.ttl = 24h;
+    return (deliver);
 
 }

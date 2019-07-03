@@ -3,11 +3,6 @@
  */
 
 sub normalize_recv {
-    # Normalize the query arguments
-    # if (req.url !~ "^/magazin") {
-    #  set req.url = std.querysort(req.url);
-    #}
-
     # Strip a trailing ? if it exists
     if (req.url ~ "\?$") {
       set req.url = regsub(req.url, "\?$", "");
