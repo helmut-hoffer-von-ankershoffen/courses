@@ -1,0 +1,45 @@
+#profiler {
+
+	.results {
+
+		width: 100%;
+
+		table {
+			border-collapse: collapse;
+		}
+		thead tr {
+			background: darken( rgb(241, 241, 241), 20 );
+			border-bottom: 2px solid black;
+		}
+
+		tbody {
+
+			tr:nth-of-type(odd) {
+				background: darken( rgb(241, 241, 241), 3 );
+			}
+
+		}
+
+		td.error {
+			color: red;
+		}
+
+		td.deviates {
+			color: orange;
+		}
+
+
+		th, td {
+			border: 1px solid #ccc;
+			padding: 5px;
+			text-align: center;
+		}
+
+		th.row-title{
+			text-align: right;
+			min-width: 80px;
+		}
+
+	}
+
+}

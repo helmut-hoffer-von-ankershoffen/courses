@@ -295,7 +295,7 @@ production-borg-build-and-push: ## Build borg docker image, tag and push to priv
 	docker tag borg h2.vlan:5001/courses/borg:latest
 	docker push h2.vlan:5001/courses/borg
 
-production-build-and-deploy: build-and-push production-deploy ## Build all docker images and deploy to production
+production-build-and-deploy: production-build-and-push production-deploy ## Build all docker images and deploy to production
 
 production-deploy: ## Deploy to production without building first
 	cd workflow/production && ansible-playbook main.yml --tags "deploy"
