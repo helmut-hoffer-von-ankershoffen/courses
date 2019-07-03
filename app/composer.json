@@ -36,12 +36,9 @@
     "wpackagist-plugin/wordpress-seo": "^11",
     "wpackagist-plugin/elementor": "^2",
     "wpackagist-plugin/broken-link-checker": "^1",
-    "wpackagist-plugin/regenerate-thumbnails": "^3",
-    "wpackagist-plugin/simple-image-sizes": "^3",
     "wpackagist-plugin/better-search-replace": "^1",
     "wpackagist-plugin/plugin-profiler": "^1.1",
     "wpackagist-plugin/query-monitor": "^3.3",
-    "wpackagist-plugin/wp-smushit": "^3.2",
     "wpackagist-plugin/shortpixel-image-optimiser": "^4"
   },
   "require-dev": {

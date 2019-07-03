@@ -40,11 +40,8 @@ echo "Activating plugins ..."
 $CMD_APP plugin activate better-search-replace
 $CMD_APP plugin activate broken-link-checker
 $CMD_APP plugin activate elementor
-$CMD_APP plugin activate regenerate-thumbnails
-$CMD_APP plugin activate simple-image-sizes
-$CMD_APP plugin activate w3-total-cache
 $CMD_APP plugin activate wordpress-seo
-# $CMD_APP plugin activate wp-smushit
+$CMD_APP plugin activate w3-total-cache
 
 if [ "$APP_STAGE" = "production" ]
 then

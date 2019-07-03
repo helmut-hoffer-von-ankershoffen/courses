@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63e5b0e9e894e0550ca9809fa3c19601",
+    "content-hash": "2cffd7b5c4c690a76342c8e8f6ffc66e",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -3791,40 +3791,58 @@
             "homepage": "https://wordpress.org/plugins/elementor/"
         },
         {
-            "name": "wpackagist-plugin/regenerate-thumbnails",
-            "version": "3.1.1",
+            "name": "wpackagist-plugin/plugin-profiler",
+            "version": "1.1.2",
             "source": {
                 "type": "svn",
-                "url": "https://plugins.svn.wordpress.org/regenerate-thumbnails/",
-                "reference": "tags/3.1.1"
+                "url": "https://plugins.svn.wordpress.org/plugin-profiler/",
+                "reference": "tags/1.1.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/regenerate-thumbnails.3.1.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/plugin-profiler.1.1.2.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
             },
             "type": "wordpress-plugin",
-            "homepage": "https://wordpress.org/plugins/regenerate-thumbnails/"
+            "homepage": "https://wordpress.org/plugins/plugin-profiler/"
         },
         {
-            "name": "wpackagist-plugin/simple-image-sizes",
-            "version": "3.2.1",
+            "name": "wpackagist-plugin/query-monitor",
+            "version": "3.3.6",
             "source": {
                 "type": "svn",
-                "url": "https://plugins.svn.wordpress.org/simple-image-sizes/",
-                "reference": "tags/3.2.1"
+                "url": "https://plugins.svn.wordpress.org/query-monitor/",
+                "reference": "tags/3.3.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/simple-image-sizes.3.2.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/query-monitor.3.3.6.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
             },
             "type": "wordpress-plugin",
-            "homepage": "https://wordpress.org/plugins/simple-image-sizes/"
+            "homepage": "https://wordpress.org/plugins/query-monitor/"
+        },
+        {
+            "name": "wpackagist-plugin/shortpixel-image-optimiser",
+            "version": "4.14.2",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/shortpixel-image-optimiser/",
+                "reference": "tags/4.14.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/shortpixel-image-optimiser.4.14.2.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/shortpixel-image-optimiser/"
         },
         {
             "name": "wpackagist-plugin/w3-total-cache",
