@@ -49,7 +49,6 @@ if [ "$APP_STAGE" = "production" ]
 then
 
     echo "Activating plugins for production ..."
-    $CMD_APP plugin activate cdn-enabler
 
 fi
 
