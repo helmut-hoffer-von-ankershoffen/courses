@@ -39,7 +39,6 @@
     "wpackagist-plugin/regenerate-thumbnails": "^3",
     "wpackagist-plugin/simple-image-sizes": "^3",
     "wpackagist-plugin/better-search-replace": "^1",
-    "wpackagist-plugin/cdn-enabler": "1.0.9",
     "wpackagist-plugin/plugin-profiler": "^1.1",
     "wpackagist-plugin/query-monitor": "^3.3"
   },

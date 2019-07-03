@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c691ce5cb1802d408496a586c63110bf",
+    "content-hash": "a826fa0aeb3a3f087487655f55e09347",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -3771,24 +3771,6 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/broken-link-checker/"
-        },
-        {
-            "name": "wpackagist-plugin/cdn-enabler",
-            "version": "1.0.9",
-            "source": {
-                "type": "svn",
-                "url": "https://plugins.svn.wordpress.org/cdn-enabler/",
-                "reference": "tags/1.0.9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/cdn-enabler.1.0.9.zip"
-            },
-            "require": {
-                "composer/installers": "~1.0"
-            },
-            "type": "wordpress-plugin",
-            "homepage": "https://wordpress.org/plugins/cdn-enabler/"
         },
         {
             "name": "wpackagist-plugin/elementor",

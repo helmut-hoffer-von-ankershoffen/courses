@@ -45,6 +45,13 @@ $CMD_APP plugin activate simple-image-sizes
 $CMD_APP plugin activate w3-total-cache
 $CMD_APP plugin activate wordpress-seo
 
+if [ "$APP_STAGE" = "production" ]
+then
+
+    echo "Activating plugins for production ..."
+
+fi
+
 echo "Activating theme ..."
 $CMD_APP theme activate hestia
 
