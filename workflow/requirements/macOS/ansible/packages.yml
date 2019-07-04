@@ -41,6 +41,7 @@ homebrew_cask_apps:
   - google-chrome           # Common browser
   - github                  # UI for Git/GitHub
   - cyberduck               # FTP Client
+  - borgbackup              # Borgbackup
 
 composer_packages:
   - name: hirak/prestissimo

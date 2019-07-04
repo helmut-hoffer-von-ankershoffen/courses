@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "$0")"
+
+export BORG_PASSPHRASE="Phl9EiNohr5koosh1Wohs3Shoo3ooZ6p"
+export BORG_REPO="borgbackup@router.maxxx.pro:/var/borgbackup/repos/courses.production"
+export BORG_RSH="ssh -i .ssh/id_borg_rsa"
+
+/usr/local/bin/borg "$@"
