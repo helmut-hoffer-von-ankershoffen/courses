@@ -5,13 +5,15 @@ import VueResource from 'vue-resource'
 
 Vue.use(VueResource)
 
-const initialize = function ({commit, state}) {
+const initialize = function ({commit, state}, data) {
   commit('setAjaxState', true)
   console.log('%c Fetching sites.', 'color: #FADD6E')
   Vue.http({
     url: themeisleSitesLibApi.root + '/initialize_sites_library',
     method: 'GET',
     headers: {'X-WP-Nonce': themeisleSitesLibApi.nonce},
+    params: {'req': data.req},
+    body: data.data,
     responseType: 'json',
     emulateJSON: true
   }).then(function (response) {
@@ -27,6 +29,10 @@ const initialize = function ({commit, state}) {
 }
 
 const importSite = function ({commit, state}, data) {
+  startImport({commit, state}, data)
+}
+
+const startImport = function ({commit, state}, data) {
   commit('setImportingState', true)
   installPlugins({commit, state}, data)
 }
@@ -53,6 +59,9 @@ const installPlugins = function ({commit, state}, data) {
     url: themeisleSitesLibApi.root + '/install_plugins',
     method: 'POST',
     headers: {'X-WP-Nonce': themeisleSitesLibApi.nonce},
+    params: {
+      'req': data.req
+    },
     body: {
       'data': state.importOptions.installablePlugins
     },
@@ -87,6 +96,9 @@ const importContent = function ({commit, state}, data) {
     url: themeisleSitesLibApi.root + '/import_content',
     method: 'POST',
     headers: {'X-WP-Nonce': themeisleSitesLibApi.nonce},
+    params: {
+      'req': data.req
+    },
     body: {
       'data': {
         'contentFile': data.content.content_file,
@@ -156,8 +168,11 @@ const importThemeMods = function ({commit, state}, data) {
     url: themeisleSitesLibApi.root + '/import_theme_mods',
     method: 'POST',
     headers: {'X-WP-Nonce': themeisleSitesLibApi.nonce},
+    params: {
+      'req': data.req
+    },
     body: {
-      'data': data.themeMods,
+      'data': data.themeMods
     },
     responseType: 'json',
     emulateJSON: true
@@ -185,6 +200,9 @@ const importWidgets = function ({commit, state}, data) {
     url: themeisleSitesLibApi.root + '/import_widgets',
     method: 'POST',
     headers: {'X-WP-Nonce': themeisleSitesLibApi.nonce},
+    params: {
+      'req': data.req
+    },
     body: {
       'data': data.widgets
     },
@@ -208,6 +226,9 @@ const migrateTemplate = function ({commit, state}, data) {
     url: themeisleSitesLibApi.root + '/migrate_frontpage',
     method: 'POST',
     headers: {'X-WP-Nonce': themeisleSitesLibApi.nonce},
+    params: {
+      'req': data.req
+    },
     body: {
       'template': data.template,
       'template_name': data.template_name
@@ -237,6 +258,9 @@ const dismissMigration = function ({commit, state}, data) {
     url: themeisleSitesLibApi.root + '/dismiss_migration',
     method: 'POST',
     headers: {'X-WP-Nonce': themeisleSitesLibApi.nonce},
+    params: {
+      'req': data.req
+    },
     body: {
       'theme_mod': data.theme_mod
     },

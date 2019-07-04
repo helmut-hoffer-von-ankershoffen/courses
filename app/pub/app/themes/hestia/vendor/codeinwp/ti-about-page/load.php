@@ -6,9 +6,6 @@
  * @package ti-about-page
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	return;
-}
 if ( ! class_exists( 'Ti_About_Page' ) ) {
 	require_once 'class-ti-about-page.php';
 }

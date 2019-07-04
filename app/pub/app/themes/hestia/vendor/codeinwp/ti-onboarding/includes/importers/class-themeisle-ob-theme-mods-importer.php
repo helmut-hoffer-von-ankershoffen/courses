@@ -13,7 +13,6 @@
  * Class Themeisle_OB_Theme_Mods_Importer
  */
 class Themeisle_OB_Theme_Mods_Importer {
-	use Themeisle_OB_Image_Src_Handler;
 
 	/**
 	 * Log
@@ -35,13 +34,6 @@ class Themeisle_OB_Theme_Mods_Importer {
 	 * @var array
 	 */
 	private $theme_mods = array();
-
-	/**
-	 * Options array.
-	 *
-	 * @var array
-	 */
-	private $options = array();
 
 	/**
 	 * Import theme mods.
@@ -91,26 +83,7 @@ class Themeisle_OB_Theme_Mods_Importer {
 			if ( $mod === '__ti_import_menus_location' ) {
 				continue;
 			}
-			if ( $value === 'true' ) {
-				$value = true;
-			}
-
-			if ( $value === 'false' ) {
-				$value = false;
-			}
 			set_theme_mod( $mod, $value );
-		}
-
-		$this->options = isset( $data['wp_options'] ) ? $data['wp_options'] : array();
-		foreach ( $this->options as $key => $value ) {
-			if ( $value === 'true' ) {
-				$value = true;
-			}
-
-			if ( $value === 'false' ) {
-				$value = false;
-			}
-			update_option( $key, $value );
 		}
 
 		// Set nav menu locations.
@@ -170,7 +143,14 @@ class Themeisle_OB_Theme_Mods_Importer {
 	 */
 	private function change_theme_mods_root_url( &$item ) {
 		do_action( 'themeisle_ob_before_change_theme_mods_root_url' );
-		$item = $this->replace_image_urls( $item );
+
+		$current_site        = home_url();
+		$source_site         = $this->source_url;
+		$item                = str_replace( $source_site, $current_site, $item );
+		$escaped_source_url  = str_replace( '/', '\/', $source_site );
+		$escaped_current_url = str_replace( '/', '\/', $current_site );
+		$item                = str_replace( $escaped_source_url, $escaped_current_url, $item );
+
 		do_action( 'themeisle_ob_after_change_theme_mods_root_url' );
 	}
 

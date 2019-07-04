@@ -233,7 +233,7 @@ class Hestia_Public {
 	}
 
 	/**
-	 * Maybe enqueue Parallax Script.
+	 * Maybe enqueue Parallax Script
 	 */
 	private function maybe_enqueue_parallax() {
 		if ( ! Hestia_First_Front_Page_Section::should_display_parallax() ) {
@@ -435,7 +435,6 @@ class Hestia_Public {
 		add_theme_support( 'starter-content', $this->get_starter_content() );
 		add_theme_support( 'themeisle-demo-import', $this->get_ti_demo_content_support_data() );
 		add_theme_support( 'align-wide' );
-		add_theme_support( 'header-footer-elementor' );
 
 		/**
 		 * Add support for wide alignments.
@@ -581,32 +580,28 @@ class Hestia_Public {
 						'url'   => 'https://demo.themeisle.com/hestia-vet-center',
 						'title' => 'Vet Center Demo',
 					),
-					'hestia-zelle'         => array(
-						'url'   => 'https://demo.themeisle.com/hestia-zelle',
-						'title' => 'Agency Travel Demo',
-					),
 				),
 			),
 			'upsell'      => array(
 				'elementor' => array(
 					'hestia-lawyers'     => array(
 						'url'        => 'https://demo.themeisle.com/hestia-lawyers/',
-						'screenshot' => 'https://demo.themeisle.com/hestia-pro-demo-content/wp-content/uploads/sites/105/2019/03/hestia-lawyers-demo-screenshot-big.png',
+						'screenshot' => 'https://demo.themeisle.com/hestia-pro-demo-content/wp-content/uploads/sites/105/2018/08/hestia-lawyers-demo-screenshot.png',
 						'title'      => 'Lawyers Demo',
 					),
 					'hestia-travel'      => array(
 						'url'        => 'https://demo.themeisle.com/hestia-travel/',
-						'screenshot' => 'https://demo.themeisle.com/hestia-pro-demo-content/wp-content/uploads/sites/105/2019/03/hestia-travel-demo-screenshot-big.png',
+						'screenshot' => 'https://demo.themeisle.com/hestia-pro-demo-content/wp-content/uploads/sites/105/2018/08/hestia-travel-demo-screenshot.png',
 						'title'      => 'Travel Agency Demo',
 					),
 					'hestia-coffee-shop' => array(
 						'url'        => 'https://demo.themeisle.com/hestia-coffee-shop/',
-						'screenshot' => 'https://demo.themeisle.com/hestia-pro-demo-content/wp-content/uploads/sites/105/2019/03/hestia-coffee-shop-demo-screenshot-big.png',
+						'screenshot' => 'https://demo.themeisle.com/hestia-pro-demo-content/wp-content/uploads/sites/105/2018/08/hestia-coffee-shop-demo-screenshot.png',
 						'title'      => 'Coffee Shop Demo',
 					),
 					'hestia-gym'         => array(
 						'url'        => 'https://demo.themeisle.com/hestia-gym/',
-						'screenshot' => 'https://demo.themeisle.com/hestia-pro-demo-content/wp-content/uploads/sites/105/2019/03/hestia-gym-demo-screenshot-big.png',
+						'screenshot' => 'https://demo.themeisle.com/hestia-pro-demo-content/wp-content/uploads/sites/105/2018/08/hestia-gym-demo-screenshot.png',
 						'title'      => 'Gym Demo',
 					),
 				),

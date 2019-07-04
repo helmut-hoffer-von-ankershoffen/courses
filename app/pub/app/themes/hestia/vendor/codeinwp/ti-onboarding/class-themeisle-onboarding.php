@@ -19,7 +19,7 @@ class Themeisle_Onboarding {
 	 *
 	 * @var string Version string.
 	 */
-	const VERSION = '1.4.1';
+	const VERSION = '1.3.0';
 	/**
 	 * Sites Library API URL.
 	 *
@@ -139,7 +139,6 @@ class Themeisle_Onboarding {
 
 		$api = new Themeisle_OB_Rest_Server();
 		$api->init();
-		require_once 'includes/importers/helpers/trait-themeisle-ob-image-src-handler.php';
 	}
 
 	/**

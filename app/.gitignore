@@ -13,6 +13,9 @@ pub/app/cache/*
 
 pub/app/w3tc-config/master.php
 
+pub/app/ai1wm-backups/*
+!pub/app/ai1wm-backups/.gitkeep
+
 # Dotenv
 .env
 .env.*

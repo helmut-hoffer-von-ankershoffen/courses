@@ -17,7 +17,7 @@ window.addEventListener('load', function () {
       App
     },
     created () {
-      store.dispatch('initialize')
+      store.dispatch('initialize', { req: 'Init Sites Library', data: {} })
     }
   })
 })

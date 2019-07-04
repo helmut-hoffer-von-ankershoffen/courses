@@ -254,8 +254,7 @@ jQuery( document ).ready(
 		);
 
 		var color_options = {
-			change: function( event, ui ){
-                jQuery( event.target ).val( ui.color.toString() );
+			change: function(){
 				customizer_repeater_refresh_general_control_values();
 			}
 		};

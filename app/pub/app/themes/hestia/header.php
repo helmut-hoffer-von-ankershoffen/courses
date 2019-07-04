@@ -41,7 +41,6 @@ if ( (bool) $hide_top_bar === false ) {
 </head>
 
 <body <?php body_class(); ?>>
-	<?php wp_body_open(); ?>
 	<div class="<?php echo esc_attr( $wrapper_div_classes ); ?>">
 		<header class="header <?php echo esc_attr( $header_class ); ?>">
 			<?php

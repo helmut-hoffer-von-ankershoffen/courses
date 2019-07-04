@@ -98,7 +98,6 @@ class Hestia_Autoloader {
 			'Hestia_Contact_Controls'                     => HESTIA_PHP_INCLUDE . 'customizer/front-page',
 			'Hestia_Subscribe_Controls'                   => HESTIA_PHP_INCLUDE . 'customizer/front-page',
 			'Hestia_Gutenberg'                            => HESTIA_PHP_INCLUDE . 'compatibility',
-			'Hestia_Header_Footer_Elementor'              => HESTIA_PHP_INCLUDE . 'compatibility/page-builder',
 			'Hestia_Page_Builder_Helper'                  => HESTIA_PHP_INCLUDE . 'compatibility/page-builder',
 			'Hestia_Elementor_Compatibility'              => HESTIA_PHP_INCLUDE . 'compatibility/page-builder',
 			'Hestia_Beaver_Builder_Compatibility'         => HESTIA_PHP_INCLUDE . 'compatibility/page-builder',
