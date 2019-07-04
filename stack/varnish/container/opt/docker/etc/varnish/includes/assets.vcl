@@ -30,6 +30,7 @@ sub assets_backend_response {
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cache-Control;
         set beresp.ttl = 365d;
+        set beresp.http.x-obj-ttl = beresp.ttl + "s";
         return (deliver);
     }
 

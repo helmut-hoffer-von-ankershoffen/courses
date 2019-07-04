@@ -21,7 +21,7 @@ include "/opt/docker/etc/varnish/includes/probe.vcl";
 include "/opt/docker/etc/varnish/includes/tracking.vcl";
 include "/opt/docker/etc/varnish/includes/websocket.vcl";
 include "/opt/docker/etc/varnish/includes/wp.vcl";
-
+include "/opt/docker/etc/varnish/includes/expires.vcl";
 
 acl invalidators {
      "localhost";
@@ -85,6 +85,7 @@ sub vcl_deliver {
     call devices_deliver;
     call debug_deliver;
     call normalize_deliver;
+    call expires_deliver;
 }
 
 sub vcl_backend_error {

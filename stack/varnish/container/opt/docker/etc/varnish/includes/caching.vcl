@@ -54,6 +54,7 @@ sub caching_rules_backend_response {
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cache-Control;
         set beresp.ttl = 24h;
+        set beresp.http.x-obj-ttl = beresp.ttl + "s";
         return (deliver);
     }
 
@@ -61,7 +62,7 @@ sub caching_rules_backend_response {
     if (beresp.http.X-Type == "FORCE_CACHE") {
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cache-Control;
-        set beresp.ttl = 24h;
+        set beresp.http.x-obj-ttl = beresp.ttl + "s";
         return (deliver);
     }
 
@@ -75,6 +76,7 @@ sub caching_rules_backend_response {
 
     # set the default cache time of 24 hours
     set beresp.ttl = 24h;
+    set beresp.http.x-obj-ttl = beresp.ttl + "s";
     return (deliver);
 
 }
