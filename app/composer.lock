@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1b73b3a369e0e5ec1fd3b33be099c04",
+    "content-hash": "d8029834706520d571dd74e76021a5f8",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -3828,15 +3828,15 @@
         },
         {
             "name": "wpackagist-plugin/fast-velocity-minify",
-            "version": "2.6.6",
+            "version": "2.6.7",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/fast-velocity-minify/",
-                "reference": "tags/2.6.6"
+                "reference": "tags/2.6.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/fast-velocity-minify.2.6.6.zip"
+                "url": "https://downloads.wordpress.org/plugin/fast-velocity-minify.2.6.7.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -3897,6 +3897,42 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/lazy-loading-responsive-images/"
+        },
+        {
+            "name": "wpackagist-plugin/lifterlms",
+            "version": "3.33.2",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/lifterlms/",
+                "reference": "tags/3.33.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/lifterlms.3.33.2.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/lifterlms/"
+        },
+        {
+            "name": "wpackagist-plugin/lifterlms-labs",
+            "version": "1.5.2",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/lifterlms-labs/",
+                "reference": "tags/1.5.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/lifterlms-labs.1.5.2.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/lifterlms-labs/"
         },
         {
             "name": "wpackagist-plugin/mailchimp-for-woocommerce",
@@ -4131,6 +4167,42 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/wp-gdpr-compliance/"
+        },
+        {
+            "name": "wpackagist-plugin/wp-mail-logging",
+            "version": "1.9.1",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/wp-mail-logging/",
+                "reference": "tags/1.9.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/wp-mail-logging.1.9.1.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/wp-mail-logging/"
+        },
+        {
+            "name": "wpackagist-plugin/wp-mail-smtp",
+            "version": "1.4.2",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/wp-mail-smtp/",
+                "reference": "tags/1.4.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/wp-mail-smtp.1.4.2.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/wp-mail-smtp/"
         },
         {
             "name": "wpackagist-theme/astra",

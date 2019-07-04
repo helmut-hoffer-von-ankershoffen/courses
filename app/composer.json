@@ -56,7 +56,11 @@
     "wpackagist-theme/hestia":"^2",
     "wpackagist-plugin/fast-velocity-minify": "^2",
     "wpackagist-plugin/lazy-loading-responsive-images":"^5",
-    "wpackagist-plugin/swap-google-font-display": "^1"
+    "wpackagist-plugin/swap-google-font-display": "^1",
+    "wpackagist-plugin/wp-mail-logging": "^1",
+    "wpackagist-plugin/wp-mail-smtp": "^1",
+    "wpackagist-plugin/lifterlms": "^3",
+    "wpackagist-plugin/lifterlms-labs": "^1"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.4",

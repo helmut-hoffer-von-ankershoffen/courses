@@ -44,17 +44,8 @@ if($fvm_change_cache_path !== false && $fvm_change_cache_base !== false && strle
 	$upload['baseurl'] = trim($fvm_change_cache_base);
 } else {
 	$up = wp_upload_dir(); # default 
-	
-	# upload path for multisite
 	$upload['basedir'] = rtrim($up['basedir']);
-	$upload['baseurl'] = rtrim($up['baseurl']);
-	
-	# for single sites, change to the cache directory
-	if(basename($up['basedir']) == 'uploads') {
-		$upload['basedir'] = dirname($upload['basedir']);
-		$upload['baseurl'] = dirname($upload['baseurl']);
-	}
-	
+	$upload['baseurl'] = rtrim($up['baseurl']);	
 }
 
 # last update or zero
@@ -152,7 +143,7 @@ function fvm_purge_old() {
 					$dir = $cachebaseparent.'/'.$d;
 					if(is_dir($dir)) { 
 						fastvelocity_rrmdir($dir); 
-						rmdir($dir);
+						if(is_dir($dir)) { rmdir($dir); }
 					}
 				}
 			}
@@ -233,7 +224,7 @@ function fastvelocity_rrmdir($path) {
 			if($f->isFile()){ unlink($f->getRealPath());
 			} else if(!$f->isDot() && $f->isDir()){
 				fastvelocity_rrmdir($f->getRealPath());
-				rmdir($f->getRealPath());
+				if(is_dir($f->getRealPath())) { rmdir($f->getRealPath()); }
 			}
 		}
 		
@@ -353,6 +344,15 @@ if (class_exists("WpeCommon")) {
 if (class_exists("Breeze_PurgeCache")) {
 	Breeze_PurgeCache::breeze_cache_flush();
 	return __( '<div class="notice notice-info is-dismissible"><p>All caches from <strong>Breeze</strong> have also been purged.</p></div>');
+}
+
+
+# other lesser plugins
+
+# swift
+if (class_exists("Swift_Performance_Cache")) {
+	Swift_Performance_Cache::clear_all_cache();
+	return __( '<div class="notice notice-info is-dismissible"><p>All caches from <strong>Swift Performance</strong> have also been purged.</p></div>');
 }
 
 }

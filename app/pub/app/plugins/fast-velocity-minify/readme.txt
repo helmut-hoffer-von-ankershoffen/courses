@@ -3,7 +3,7 @@ Contributors: Alignak
 Tags: PHP Minify, Lighthouse, GTmetrix, Pingdom, Pagespeed, CSS Merging, JS Merging, CSS Minification, JS Minification, Speed Optimization, HTML Minification, Performance, Optimization, Speed, Fast
 Requires at least: 4.5
 Requires PHP: 5.5
-Stable tag: 2.6.6
+Stable tag: 2.6.7
 Tested up to: 5.2.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -197,6 +197,11 @@ Please backup your site before updating. Version 3.0 will have a major code rewr
 
 
 == Changelog ==
+
+= 2.6.7 [2019.07.04] =
+* added cache purging support for the swift cache plugin
+* changed cache directory to the uploads directory for compatibility reasons
+* better cache purging checks
 
 = 2.6.6 [2019.06.20] =
 * cache purging bug fixes
