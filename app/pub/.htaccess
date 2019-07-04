@@ -182,3 +182,7 @@ RewriteRule . /index.php [L]
 </IfModule>
 
 # END WordPress
+
+# BEGIN ShortPixelWebp
+
+# END ShortPixelWebp

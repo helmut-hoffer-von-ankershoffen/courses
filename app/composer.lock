@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d01cfc527a3b76de8bb4d2ba34f7cfae",
+    "content-hash": "c1b73b3a369e0e5ec1fd3b33be099c04",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -3881,6 +3881,24 @@
             "homepage": "https://wordpress.org/plugins/klarna-payments-for-woocommerce/"
         },
         {
+            "name": "wpackagist-plugin/lazy-loading-responsive-images",
+            "version": "5.0.0",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/lazy-loading-responsive-images/",
+                "reference": "tags/5.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/lazy-loading-responsive-images.5.0.0.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/lazy-loading-responsive-images/"
+        },
+        {
             "name": "wpackagist-plugin/mailchimp-for-woocommerce",
             "version": "2.1.17",
             "source": {
@@ -3951,6 +3969,24 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/shortpixel-image-optimiser/"
+        },
+        {
+            "name": "wpackagist-plugin/swap-google-font-display",
+            "version": "1.0.0",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/swap-google-font-display/",
+                "reference": "trunk"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/swap-google-font-display.zip?timestamp=1557902597"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/swap-google-font-display/"
         },
         {
             "name": "wpackagist-plugin/themeisle-companion",
