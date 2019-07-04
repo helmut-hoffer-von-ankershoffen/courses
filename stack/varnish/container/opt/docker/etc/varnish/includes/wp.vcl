@@ -1,48 +1,56 @@
-/*
- * Adapt for wordpress, cp. https://gist.github.com/matthewjackowski/062be03b41a68edbadfc
- */
-
 sub wp_recv {
-    # pass if dynamic stuff of wp called
-    if (req.url ~ "(wp-login|wp-admin|shop|product|cart|checkout|account)" || req.url ~ "preview=true" || req.url ~ "xmlrpc.php") {
+
+    # pass on dynamic stuff
+    if (req.url ~ "(admin|control|comments|register|login|account|logout|lost-password|shop|product|cart|checkout|addons)" || req.url ~ "(preview|add-to-cart)" || req.url ~ "(xmlrpc|api)") {
         return (pass);
     }
 
-    # pass if wp cookie set
-    if (req.http.cookie) {
-        if (req.http.cookie ~ "(wp|wordpress|woocommerce|comment_author_)") {
-            return(pass);
-        }
+    # pass on relevant cookie set
+    if (req.http.cookie ~ "(wp|wordpress|woocommerce|comment|author)") {
+        return(pass);
     }
 
-    # don't cache ajax requests, urls with ?nocache or comments/login/regiser
-    if (req.http.X-Requested-With == "XMLHttpRequest" || req.url ~ "nocache" || req.url ~ "(control.php|wp-comments-post.php|wp-login.php|register.php)") {
+    # pass on ajax requests and urls with ?nocache
+    if (req.http.X-Requested-With == "XMLHttpRequest" || req.url ~ "nocache") {
         return (pass);
     }
 
-    # don't cache on basic authentication
+    # pass on basic authentication
     if (req.http.Authorization) {
       return (pass);
     }
+
 }
 
 sub wp_backend_response {
 
-    # no caching given URL
-    if (bereq.url ~ "(wp-login|wp-admin|shop|product|cart|checkout|account)" || bereq.url ~ "preview=true" || bereq.url ~ "xmlrpc.php") {
+    # no caching on dynamic stuff
+    if (bereq.url ~ "(admin|control|comments|register|login|account|logout|lost-password|shop|product|cart|checkout|addons)" || bereq.url ~ "(preview|add-to-cart)" || bereq.url ~ "(xmlrpc|api)") {
 		set beresp.uncacheable = true;
 		set beresp.ttl = 0s;
         set beresp.grace = 0s;
         return (deliver);
     }
 
-    # no caching given cookie
-    if (bereq.http.cookie) {
-        if (bereq.http.cookie ~ "(wp|wordpress|woocommerce|comment_author_)") {
-            set beresp.uncacheable = true;
-            set beresp.ttl = 0s;
-            set beresp.grace = 0s;
-            return(deliver);
-        }
+    # no caching on relevant cookie set
+    if (bereq.http.cookie ~ "(wp|wordpress|woocommerce|comment|author)") {
+        set beresp.uncacheable = true;
+        set beresp.ttl = 0s;
+        set beresp.grace = 0s;
+        return(deliver);
     }
+
+    # no caching on ajax requests and urls with ?nocache
+    if (bereq.http.X-Requested-With == "XMLHttpRequest" || bereq.url ~ "nocache") {
+        return (pass);
+    }
+
+    # no caching on basic authentication
+    if (bereq.http.Authorization) {
+        set beresp.uncacheable = true;
+        set beresp.ttl = 0s;
+        set beresp.grace = 0s;
+        return(deliver);
+    }
+
 }
