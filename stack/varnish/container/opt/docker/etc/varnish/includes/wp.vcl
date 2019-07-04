@@ -42,7 +42,7 @@ sub wp_backend_response {
 
     # no caching on ajax requests and urls with ?nocache
     if (bereq.http.X-Requested-With == "XMLHttpRequest" || bereq.url ~ "nocache") {
-        return (pass);
+        return (deliver);
     }
 
     # no caching on basic authentication

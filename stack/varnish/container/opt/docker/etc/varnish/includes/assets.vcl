@@ -22,7 +22,6 @@ sub assets_recv {
       }
 }
 
-
 sub assets_backend_response {
     # Enable cache for all static files
     # The same argument as the static caches from above: monitor your cache size, if you get data nuked out of it, consider giving up the static file cache.
@@ -31,6 +30,7 @@ sub assets_backend_response {
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cache-Control;
         set beresp.ttl = 365d;
+        return (deliver);
     }
 
     # Large static files are delivered directly to the end-user without
@@ -40,6 +40,7 @@ sub assets_backend_response {
         unset beresp.http.Set-Cookie;
         unset beresp.http.Cache-Control;
         set beresp.do_stream = true;  # Check memory usage it'll grow in fetch_chunksize blocks (128k by default) if the backend doesn't send a Content-Length header, so only enable it for big objects
+        return (deliver);
     }
 }
 
