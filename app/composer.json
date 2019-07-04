@@ -51,9 +51,10 @@
     "wpackagist-plugin/woocommerce-services":"^1",
     "wpackagist-plugin/wordpress-seo": "^11",
     "wpackagist-plugin/wp-gdpr-compliance": "^1",
-    "wpackagist-theme/astra":"^1.8",
-    "wpackagist-theme/generatepress":"2.3",
-    "wpackagist-theme/hestia":"2.4"
+    "wpackagist-theme/astra":"^1",
+    "wpackagist-theme/generatepress":"^2",
+    "wpackagist-theme/hestia":"^2",
+    "wpackagist-plugin/fast-velocity-minify": "^2"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.4",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f1ae6a34437f79229c7d99745d5d57c",
+    "content-hash": "d01cfc527a3b76de8bb4d2ba34f7cfae",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -3827,6 +3827,24 @@
             "homepage": "https://wordpress.org/plugins/facebook-for-woocommerce/"
         },
         {
+            "name": "wpackagist-plugin/fast-velocity-minify",
+            "version": "2.6.6",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/fast-velocity-minify/",
+                "reference": "tags/2.6.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/fast-velocity-minify.2.6.6.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/fast-velocity-minify/"
+        },
+        {
             "name": "wpackagist-plugin/jetpack",
             "version": "7.5.1",
             "source": {
@@ -4098,15 +4116,15 @@
         },
         {
             "name": "wpackagist-theme/generatepress",
-            "version": "2.3",
+            "version": "2.3.2",
             "source": {
                 "type": "svn",
                 "url": "https://themes.svn.wordpress.org/generatepress/",
-                "reference": "2.3"
+                "reference": "2.3.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/theme/generatepress.2.3.zip"
+                "url": "https://downloads.wordpress.org/theme/generatepress.2.3.2.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -4116,15 +4134,15 @@
         },
         {
             "name": "wpackagist-theme/hestia",
-            "version": "2.4.0",
+            "version": "2.4.5",
             "source": {
                 "type": "svn",
                 "url": "https://themes.svn.wordpress.org/hestia/",
-                "reference": "2.4.0"
+                "reference": "2.4.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/theme/hestia.2.4.0.zip"
+                "url": "https://downloads.wordpress.org/theme/hestia.2.4.5.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
