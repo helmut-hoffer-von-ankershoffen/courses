@@ -1,0 +1,5 @@
+{
+    "require": {
+        "buddypress/buddypress": "^4.3"
+    }
+}

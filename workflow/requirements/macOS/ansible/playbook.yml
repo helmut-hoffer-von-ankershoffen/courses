@@ -62,6 +62,7 @@
     - name: Install cargo packages.
       shell: "cargo install {{ item.name }}"
       with_items: "{{ cargo_packages }}"
+      ignore_errors: yes
 
     - name: Download executables.
       get_url:

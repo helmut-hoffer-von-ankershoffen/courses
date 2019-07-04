@@ -30,7 +30,7 @@ bootstrap-environment: requirements bootstrap-environment-message ## Bootstrap d
 requirements: requirements-bootstrap ## Install requirements on workstation
 
 requirements-bootstrap: ## Prepare basic packages on workstation
-	workflow/requirements/MacOSX/bootstrap
+	workflow/requirements/macOS/bootstrap
 	source ~/.bash_profile && rbenv install --skip-existing 2.2.2
 	source ~/.bash_profile && ansible-galaxy install -r workflow/requirements/macOS/ansible/requirements.yml
 	ansible-playbook -i "localhost," workflow/requirements/generic/ansible/playbook.yml --tags "hosts" --ask-become-pass
