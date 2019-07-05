@@ -46,9 +46,6 @@ requirements-hosts: ## Prepare /etc/hosts on workstation
 requirements-packages: ## Install packages workstation
 	ansible-playbook -i "localhost," workflow/requirements/macOS/ansible/playbook.yml --ask-become-pass
 
-requirements-ansible: ## Prepare ansible requirements on workstation
-	ansible-galaxy install -r deploy/requirements.yml
-
 bootstrap-environment-message: ## Echo a message that the app installation is happening now
 	@echo ""
 	@echo ""
