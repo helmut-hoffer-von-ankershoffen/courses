@@ -300,20 +300,20 @@ production-deploy: ## Deploy to production without building first
 production-open: production-logging-open ## Open services on production in your browser
 	python -mwebbrowser https://courses.maxxx.pro
 	python -mwebbrowser https://courses.maxxx.pro/wp-admin
-	python -mwebbrowser http://h2.vlan:5001:8081
-	python -mwebbrowser http://h2.vlan:5001:15672
-	python -mwebbrowser http://h2.vlan:5001:9000
+	python -mwebbrowser http://h2.vlan:8081
+	python -mwebbrowser http://h2.vlan:15672
+	python -mwebbrowser http://h2.vlan:9000
 
 production-nginx-cert-renewal: ## Renew certs of nginx on production
 	cd workflow/production && ansible-playbook main.yml --tags "cert"
 
 production-logging-open: ## Open logging dashboard (graylog)
-	python -mwebbrowser http://h2.vlan:5001:9000
+	python -mwebbrowser http://h2.vlan:9000
 
 production-monitoring-open: ## Open monitoring dashboards (UptimeRobot.com, Sentry.io and Grafana)
 	python -mwebbrowser https://stats.uptimerobot.com/OZAWPTWNA
 	python -mwebbrowser https://sentry.io/organizations/courses/issues/?project=1484857
-	python -mwebbrowser http://h2.vlan:5001:3000
+	python -mwebbrowser http://h2.vlan:3000
 
 production-user-setup: ## Setup users on production e.g. to add new or updated SSH keys
 	cd workflow/production && ansible-playbook main.yml --tags "user"
