@@ -53,7 +53,7 @@ services:
       - APP_WP_DB_PREFIX=wp_
       - APP_WP_DB_USER=root
       - APP_WP_DB_PASSWORD=secret
-      - APP_WP_ENV=development
+      - APP_WP_ENV=production
       - APP_WP_HOME=https://courses.maxxx.pro
       - APP_WP_SITEURL=https://courses.maxxx.pro/wp
       - APP_WP_DISABLE_WP_CRON=false
