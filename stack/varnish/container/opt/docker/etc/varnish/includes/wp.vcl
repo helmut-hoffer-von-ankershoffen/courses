@@ -1,7 +1,7 @@
 sub wp_recv {
 
     # pass on dynamic stuff
-    if (req.url ~ "(admin|control|comments|register|login|account|logout|lost-password|shop|product|cart|checkout|addons)" || req.url ~ "(preview|add-to-cart)" || req.url ~ "(xmlrpc|api)") {
+    if (req.url ~ "(admin|control|comments|register|login|account|logout|lost-password|shop|product|cart|checkout|addons)" || req.url ~ "(preview|add-to-cart)" || req.url ~ "(json|xml|soap|api|rest)") {
         return (pass);
     }
 
@@ -25,7 +25,7 @@ sub wp_recv {
 sub wp_backend_response {
 
     # no caching on dynamic stuff
-    if (bereq.url ~ "(admin|control|comments|register|login|account|logout|lost-password|shop|product|cart|checkout|addons)" || bereq.url ~ "(preview|add-to-cart)" || bereq.url ~ "(xmlrpc|api)") {
+    if (bereq.url ~ "(admin|control|comments|register|login|account|logout|lost-password|shop|product|cart|checkout|addons)" || bereq.url ~ "(preview|add-to-cart)" || bereq.url ~ "(json|xml|soap|api|rest)") {
 		set beresp.uncacheable = true;
 		set beresp.ttl = 0s;
         set beresp.grace = 0s;

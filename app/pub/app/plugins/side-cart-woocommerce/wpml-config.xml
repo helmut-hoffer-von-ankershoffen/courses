@@ -1,0 +1,15 @@
+<wpml-config>
+    <admin-texts>
+        <key name="xoo-wsc-gl-options">
+        	<key name="sc-subtotal-text"/>
+        	<key name="sc-empty-text"/>
+        	<key name="sc-head-text"/>
+        	<key name="sc-shipping-text"/>
+        	<key name="sc-cart-text"/>
+        	<key name="sc-checkout-text"/>
+        	<key name="sc-continue-text"/>
+        	<key name="sc-empty-cart-text"/>
+        	<key name="sc-title"/>
+        </key>
+    </admin-texts>
+</wpml-config>
