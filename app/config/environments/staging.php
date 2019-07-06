@@ -7,6 +7,7 @@ use Roots\WPConfig\Config;
 
 Config::define('SAVEQUERIES', false);
 Config::define('WP_DEBUG', false);
+Config::define('WP_DEBUG_LOG', false);
 Config::define('WP_DEBUG_DISPLAY', false);
 Config::define('WP_DISABLE_FATAL_ERROR_HANDLER', false);
 Config::define('SCRIPT_DEBUG', false);
